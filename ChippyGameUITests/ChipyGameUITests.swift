@@ -2,13 +2,13 @@
 //  ZombieCongaUITests.swift
 //  ZombieCongaUITests
 //
-//  Created by Parrot on 2019-01-29.
-//  Copyright © 2019 Parrot. All rights reserved.
+//  Created by AJAY BAJWA on 2019-10-05.
+//  Copyright © 2019 AJAY BAJWA. All rights reserved.
 //
 
 import XCTest
 
-class ZombieCongaUITests: XCTestCase {
+class ChippyGameUITests: XCTestCase {
         
     override func setUp() {
         super.setUp()
