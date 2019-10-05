@@ -12,6 +12,7 @@ import SpriteKit
 // A custom SpriteNode class.
 // Used to represent a piece of sushi in the tower.
 class Player: SKSpriteNode {
+    var bullet: SKSpriteNode!
     
     // MARK: Variables
     // --------------------------------

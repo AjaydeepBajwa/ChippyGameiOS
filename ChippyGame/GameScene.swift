@@ -25,7 +25,7 @@ class GameScene: SKScene {
         
         self.player = Player(imageNamed: "player")
         self.player.size.width = self.size.width/13
-        self.player.size.height = self.size.height/13
+        self.player.size.height = self.size.height/10
         self.player.position = CGPoint(x: self.size.width - 400, y: self.size.height / 2)
         addChild(player)
         
