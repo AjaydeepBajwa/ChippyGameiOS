@@ -19,6 +19,10 @@ class GameScene: SKScene {
     var downArrow:SKSpriteNode!
     var leftArrow:SKSpriteNode!
     var rightArrow:SKSpriteNode!
+    var upLeftArrow:SKSpriteNode!
+    var downLeftArrow:SKSpriteNode!
+    var upRightArrow:SKSpriteNode!
+    var downRightArrow:SKSpriteNode!
     var arrowTouched:String = ""
     var touch:UITouch!
     var isTouched:Bool = false
@@ -40,24 +44,44 @@ class GameScene: SKScene {
         addChild(self.player)
         
         self.leftArrow = SKSpriteNode(imageNamed: "left")
-        self.leftArrow.size = CGSize(width: self.size.width/15, height: self.size.height/10)
+        self.leftArrow.size = CGSize(width: self.size.width/20, height: self.size.height/15)
         self.leftArrow.position = CGPoint(x: 150, y: 300)
         addChild(self.leftArrow)
         
         self.downArrow = SKSpriteNode(imageNamed: "down")
-        self.downArrow.size = CGSize(width: self.size.height/10 , height: self.size.width/15)
-        self.downArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width, y: self.leftArrow.position.y - self.leftArrow.size.height*0.8)
+        self.downArrow.size = CGSize(width: self.size.height/15 , height: self.size.width/25)
+        self.downArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y - self.leftArrow.size.height*1.5)
         addChild(self.downArrow)
         
         self.rightArrow = SKSpriteNode(imageNamed: "right")
-        self.rightArrow.size = CGSize(width: self.size.width/15, height: self.size.height/10)
-        self.rightArrow.position = CGPoint(x: self.downArrow.position.x + self.leftArrow.size.width, y: self.leftArrow.position.y)
+        self.rightArrow.size = CGSize(width: self.size.width/20, height: self.size.height/15)
+        self.rightArrow.position = CGPoint(x: self.downArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y)
         addChild(self.rightArrow)
         
         self.upArrow = SKSpriteNode(imageNamed: "up")
-        self.upArrow.size = CGSize(width: self.size.height/10, height: self.size.width/15)
-        self.upArrow.position = CGPoint(x: self.downArrow.position.x, y: self.leftArrow.position.y + self.leftArrow.size.height*0.8)
+        self.upArrow.size = CGSize(width: self.size.height/15, height: self.size.width/25)
+        self.upArrow.position = CGPoint(x: self.downArrow.position.x, y: self.leftArrow.position.y + self.leftArrow.size.height*1.5)
         addChild(self.upArrow)
+        
+        self.upLeftArrow = SKSpriteNode(imageNamed: "upLeft")
+        self.upLeftArrow.size = CGSize(width: self.size.height/15, height: self.size.width/25)
+        self.upLeftArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*0.7, y: self.upArrow.position.y - self.upArrow.size.height*0.7)
+        addChild(self.upLeftArrow)
+        
+        self.downLeftArrow = SKSpriteNode(imageNamed: "downLeft")
+        self.downLeftArrow.size = CGSize(width: self.size.height/15, height: self.size.width/25)
+        self.downLeftArrow.position = CGPoint(x: self.upLeftArrow.position.x, y: self.downArrow.position.y + self.downArrow.size.height*0.7)
+        addChild(self.downLeftArrow)
+        
+        self.downRightArrow = SKSpriteNode(imageNamed: "downRight")
+        self.downRightArrow.size = CGSize(width: self.size.height/15, height: self.size.width/25)
+        self.downRightArrow.position = CGPoint(x: self.rightArrow.position.x - self.rightArrow.size.width*0.7, y: self.downLeftArrow.position.y)
+        addChild(self.downRightArrow)
+        
+        self.upRightArrow = SKSpriteNode(imageNamed: "upRight")
+        self.upRightArrow.size = CGSize(width: self.size.height/15, height: self.size.width/25)
+        self.upRightArrow.position = CGPoint(x: self.downRightArrow.position.x, y: self.upLeftArrow.position.y)
+        addChild(self.upRightArrow)
         
         
     }
@@ -113,6 +137,32 @@ class GameScene: SKScene {
             self.player.zRotation = 0
             //self.player.position.x = self.player.position.x + 10
         }
+        else if (self.arrowTouched == "upRight")&&(self.player.position.x < self.size.width){
+            let playerMove = SKAction.moveBy(x: 30, y: 30, duration: 0.01)
+            self.player.run(playerMove)
+            self.player.zRotation = .pi / 4
+            //self.player.position.x = self.player.position.x + 10
+        }
+        else if (self.arrowTouched == "downRight")&&(self.player.position.x < self.size.width)&&(self.player.position.y < self.size.height){
+            let playerMove = SKAction.moveBy(x: 30, y: -30, duration: 0.01)
+            self.player.run(playerMove)
+            self.player.zRotation = .pi / -4
+            //self.player.position.x = self.player.position.x + 10
+        }
+        
+        else if (self.arrowTouched == "downLeft")&&(self.player.position.x > 0)&&(self.player.position.y > 0){
+            let playerMove = SKAction.moveBy(x: -30, y: -30, duration: 0.01)
+            self.player.run(playerMove)
+            self.player.zRotation = .pi / -1.5
+            //self.player.position.x = self.player.position.x + 10
+        }
+        
+        else if (self.arrowTouched == "upLeft")&&(self.player.position.x > 0)&&(self.player.position.y < self.size.height){
+            let playerMove = SKAction.moveBy(x: -30, y: 30, duration: 0.01)
+            self.player.run(playerMove)
+            self.player.zRotation = .pi / 1.5
+            //self.player.position.x = self.player.position.x + 10
+        }
         
         // let indefiniteBulletMove = SKAction.repeatForever(moveBullet)
         
@@ -136,7 +186,6 @@ class GameScene: SKScene {
             print("up touched")
             self.arrowTouched = "up"
             
-            
         }
         else if self.downArrow.contains(touch.location(in: self)) {
             print("down touched")
@@ -150,6 +199,22 @@ class GameScene: SKScene {
         else if self.rightArrow.contains(touch.location(in: self)) {
             print("right touched")
             self.arrowTouched = "right"
+        }
+        else if self.upRightArrow.contains(touch.location(in: self)) {
+            print("UpRight touched")
+            self.arrowTouched = "upRight"
+        }
+        else if self.downRightArrow.contains(touch.location(in: self)) {
+            print("downRight touched")
+            self.arrowTouched = "downRight"
+        }
+        else if self.upLeftArrow.contains(touch.location(in: self)) {
+            print("upLeft touched")
+            self.arrowTouched = "upLeft"
+        }
+        else if self.downLeftArrow.contains(touch.location(in: self)) {
+            print("downLeft touched")
+            self.arrowTouched = "downLeft"
         }
         else{
             self.spawnPlayerBullet()
@@ -187,8 +252,24 @@ class GameScene: SKScene {
         else if self.rightArrow.contains(touch.location(in: self)) {
             print("right touched")
             self.arrowTouched = "right"
-            
         }
+        else if self.upRightArrow.contains(touch.location(in: self)) {
+            print("UpRight touched")
+            self.arrowTouched = "upRight"
+        }
+        else if self.downRightArrow.contains(touch.location(in: self)) {
+            print("downRight touched")
+            self.arrowTouched = "downRight"
+        }
+        else if self.upLeftArrow.contains(touch.location(in: self)) {
+            print("upLeft touched")
+            self.arrowTouched = "upLeft"
+        }
+        else if self.downLeftArrow.contains(touch.location(in: self)) {
+            print("downLeft touched")
+            self.arrowTouched = "downLeft"
+        }
+
         self.movePlayer()
         //self.callback()
     }
