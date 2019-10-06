@@ -12,6 +12,8 @@ import SpriteKit
 // Used to represent a piece of sushi in the tower.
 class Bullet: SKSpriteNode {
     
+    
+    
     // MARK: Variables
     // --------------------------------
     // MARK: Constructor - required nonsense
@@ -25,6 +27,7 @@ class Bullet: SKSpriteNode {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     
     // Mark:  Functions
     // --------------------------------

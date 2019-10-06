@@ -1,5 +1,5 @@
 //
-//  Player.swift
+//  Enemy.swift
 //  ChippyGame
 //
 //  Created by AJAY BAJWA on 2019-10-05.
@@ -11,7 +11,7 @@ import SpriteKit
 
 // A custom SpriteNode class.
 // Used to represent a piece of sushi in the tower.
-class Player: SKSpriteNode {
+class Enemy: SKSpriteNode {
     var bulletPiece: SKSpriteNode!
     //var bullets:[SKSpriteNode] = []
     
@@ -25,15 +25,15 @@ class Player: SKSpriteNode {
         super.init(texture: texture, color: color, size: size)
         
         //self.texture = SKTexture(imageNamed: "roll")
-//        self.bullet = SKSpriteNode(imageNamed:"player")
-//        self.bullet.position.y = 500
-//        self.bullet.position.x = 800
-//        addChild(self.bullet)
+        //        self.bullet = SKSpriteNode(imageNamed:"player")
+        //        self.bullet.position.y = 500
+        //        self.bullet.position.x = 800
+        //        addChild(self.bullet)
         
         //self.spawnBullet()
         
         
-
+        
         
     }
     
@@ -41,9 +41,5 @@ class Player: SKSpriteNode {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
-    
-    // Mark:  Functions
-    // --------------------------------
 }
+
