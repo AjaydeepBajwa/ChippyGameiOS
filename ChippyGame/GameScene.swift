@@ -13,7 +13,8 @@ class GameScene: SKScene {
     
     var player:Player = Player(imageNamed: "player")
     //var playerBullet: SKSpriteNode!
-    var bulletPiece:Bullet = Bullet(imageNamed: "player_bullet")
+    var playerBullet:Bullet = Bullet(imageNamed: "player_bullet")
+    var screenBorder:SKSpriteNode!
     var bulletsArray:[SKSpriteNode] = []
     var upArrow:SKSpriteNode!
     var downArrow:SKSpriteNode!
@@ -36,6 +37,7 @@ class GameScene: SKScene {
         background.zPosition = -1
         addChild(background)
         print("screen: \(self.size.width), \(self.size.height)")
+        
         
         self.player = Player(imageNamed: "player")
         self.player.size.width = self.size.width/13
@@ -85,18 +87,21 @@ class GameScene: SKScene {
         
         
     }
+    override func update(_ currentTime: TimeInterval) {
+        self.removeBullet()
+    }
     func spawnPlayerBullet() {
         // 1. Make a bullet
         
-        let playerBullet = Bullet(imageNamed: "player_bullet")
+        self.playerBullet = Bullet(imageNamed: "player_bullet")
         playerBullet.size.width = self.player.size.width/2
         playerBullet.size.height = self.player.size.height/2
         
-        //if(self.bulletsArray.count == 0){
+        if(self.bulletsArray.count == 0){
         playerBullet.position = CGPoint(x: self.player.position.x - 30, y: self.player.position.y)
         addChild(playerBullet)
         self.bulletsArray.append(playerBullet)
-        //}
+        }
         //        else{
         //            let previousBullet = self.bulletsArray[self.bulletsArray.count - 1]
         //            playerBullet.position = CGPoint(x: previousBullet.position.x-200, y: self.player.position.y)
@@ -172,6 +177,18 @@ class GameScene: SKScene {
         //self.player.texture = SKTexture(imageNamed: "up")
         
     }
+    func removeBullet(){
+        //remove bullet after it hits screen edges / Enemy
+        //if (self.frame.contains(self.playerBullet.accessibilityFrame) == false){
+        if (self.playerBullet.position.x < 1)||(self.playerBullet.position.y > self.size.height)||(self.playerBullet.position.x > self.size.width)||(self.playerBullet.position.y < 0 ) {
+            if(self.bulletsArray.count != 0){
+                print("x of removed bullet: \(self.playerBullet.position.x)")
+                self.bulletsArray.removeAll()
+                self.playerBullet.removeFromParent()
+            print("No.of bullets: \(self.bulletsArray.count)")
+            }
+        }
+    }
 
     override
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -218,6 +235,7 @@ class GameScene: SKScene {
         }
         else{
             self.spawnPlayerBullet()
+            
         }
         
         //self.movePlayer()
