@@ -15,6 +15,10 @@ class GameScene: SKScene {
     //var playerBullet: SKSpriteNode!
     var bulletPiece:Bullet = Bullet(imageNamed: "player_bullet")
     var bulletsArray:[SKSpriteNode] = []
+    var upArrow:SKSpriteNode!
+    var downArrow:SKSpriteNode!
+    var leftArrow:SKSpriteNode!
+    var rightArrow:SKSpriteNode!
     
     override func didMove(to view: SKView) {
         // Set the background color of the app
@@ -30,7 +34,27 @@ class GameScene: SKScene {
         self.player.size.width = self.size.width/13
         self.player.size.height = self.size.height/10
         self.player.position = CGPoint(x: self.size.width - 400, y: self.size.height / 2)
-        addChild(player)
+        addChild(self.player)
+        
+        self.leftArrow = SKSpriteNode(imageNamed: "left")
+        self.leftArrow.size = CGSize(width: self.size.width/15, height: self.size.height/10)
+        self.leftArrow.position = CGPoint(x: 150, y: 300)
+        addChild(self.leftArrow)
+        
+        self.downArrow = SKSpriteNode(imageNamed: "down")
+        self.downArrow.size = CGSize(width: self.size.height/10 , height: self.size.width/15)
+        self.downArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width, y: self.leftArrow.position.y - self.leftArrow.size.height*0.8)
+        addChild(self.downArrow)
+        
+        self.rightArrow = SKSpriteNode(imageNamed: "right")
+        self.rightArrow.size = CGSize(width: self.size.width/15, height: self.size.height/10)
+        self.rightArrow.position = CGPoint(x: self.downArrow.position.x + self.leftArrow.size.width, y: self.leftArrow.position.y)
+        addChild(self.rightArrow)
+        
+        self.upArrow = SKSpriteNode(imageNamed: "up")
+        self.upArrow.size = CGSize(width: self.size.height/10, height: self.size.width/15)
+        self.upArrow.position = CGPoint(x: self.downArrow.position.x, y: self.leftArrow.position.y + self.leftArrow.size.height*0.8)
+        addChild(self.upArrow)
         
         //self.buildTower()
         
@@ -91,11 +115,19 @@ class GameScene: SKScene {
     override
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
+        self.view?.isMultipleTouchEnabled = true
+        let touch = touches.first!
+        if player.contains(touch.location(in: self)) {
+            print("touched")
+        }
+        
         guard let mousePosition = touches.first?.location(in: self) else {
             return
         }
         
         print(mousePosition)
+        
+        
         self.spawnPlayerBullet()
     }
     
