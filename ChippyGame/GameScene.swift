@@ -27,6 +27,8 @@ class GameScene: SKScene {
     var arrowTouched:String = ""
     var touch:UITouch!
     var isTouched:Bool = false
+    var mouseX:CGFloat! = 100
+    var mouseY:CGFloat! = 100
     
     override func didMove(to view: SKView) {
         // Set the background color of the app
@@ -89,15 +91,17 @@ class GameScene: SKScene {
     }
     override func update(_ currentTime: TimeInterval) {
         self.removeBullet()
+        self.moveBulletToTarget()
     }
     func spawnPlayerBullet() {
         // 1. Make a bullet
         
-        self.playerBullet = Bullet(imageNamed: "player_bullet")
-        playerBullet.size.width = self.player.size.width/2
-        playerBullet.size.height = self.player.size.height/2
+       
         
-        if(self.bulletsArray.count == 0){
+        if(self.bulletsArray.count <= 1){
+            self.playerBullet = Bullet(imageNamed: "player_bullet")
+            playerBullet.size.width = self.player.size.width/2
+            playerBullet.size.height = self.player.size.height/2
         playerBullet.position = CGPoint(x: self.player.position.x - 30, y: self.player.position.y)
         addChild(playerBullet)
         self.bulletsArray.append(playerBullet)
@@ -108,10 +112,10 @@ class GameScene: SKScene {
         //            addChild(playerBullet)
         //            self.bulletsArray.append(playerBullet)
         //        }
-        let moveBullet = SKAction.moveBy(x: -50, y: 0, duration: 0.05)
-        let indefiniteBulletMove = SKAction.repeatForever(moveBullet)
-        playerBullet.run(indefiniteBulletMove)
-        
+//        let moveBullet = SKAction.moveBy(x: -50, y: 0, duration: 0.05)
+//        let indefiniteBulletMove = SKAction.repeatForever(moveBullet)
+//        playerBullet.run(indefiniteBulletMove)
+//
         
         
         print("size of bullets: \(self.bulletsArray.count)")
@@ -189,6 +193,39 @@ class GameScene: SKScene {
             }
         }
     }
+    func moveBulletToTarget() {
+        // move the zombie towards the mouse
+        // @TODO: Get the android code for moving bullet towards enemey
+        // Implement the algorithm in Swift
+        // 1. calculate disatnce between mouse and zombie
+        
+        let movement1 = CGVector(
+            dx: (self.mouseX - self.playerBullet.position.x)*5,
+            dy: (self.mouseY - self.playerBullet.position.y)*5
+        )
+        
+        let actionTransaction = SKAction.move(by: movement1, duration: 3)
+        let repeatAction = SKAction.repeat(actionTransaction, count: 3)
+        self.playerBullet.run(repeatAction)
+        
+//        let a = (self.mouseX - self.playerBullet.position.x);
+//        let b = (self.mouseY - self.playerBullet.position.y);
+//        let distance = sqrt((a * a) + (b * b))
+//
+//        // 2. calculate the "rate" to move
+//        let xn = (a / distance)
+//        let yn = (b / distance)
+//
+//        // 3. move the bullet
+//        let moveBullet = SKAction.moveBy(x: xn*10, y: yn*10, duration: 0.5)
+//        //let moveBullet = SKAction.move(to: CGPoint(x: a , y: b ), duration: 0.5)
+//        let indefiniteBulletMove = SKAction.repeatForever(moveBullet)
+//        playerBullet.run(indefiniteBulletMove)
+//        //self.playerBullet.position.x = self.playerBullet.position.x + (xn * 10);
+//        //self.playerBullet.position.y = self.playerBullet.position.y + (yn * 10);
+//
+        
+    }
 
     override
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -196,6 +233,8 @@ class GameScene: SKScene {
         self.view?.isMultipleTouchEnabled = true
         //self.touch = touches.first!
         let touch = touches.first!
+        self.mouseX = touch.location(in: self).x
+        self.mouseY = touch.location(in: self).y
     
         self.player.size.height = self.player.size.height - self.player.size.height/3
         
@@ -288,6 +327,7 @@ class GameScene: SKScene {
             self.arrowTouched = "downLeft"
         }
 
+        self.moveBulletToTarget()
         self.movePlayer()
         //self.callback()
     }
