@@ -20,8 +20,8 @@ class GameScene: SKScene {
     var leftArrow:SKSpriteNode!
     var rightArrow:SKSpriteNode!
     var arrowTouched:String = ""
-    var touch:UITouch!
-    var isTouched:Bool = false
+    var touch:CGPoint!
+    var touchMoving:Bool = false
     
     override func didMove(to view: SKView) {
         // Set the background color of the app
@@ -59,39 +59,10 @@ class GameScene: SKScene {
         self.upArrow.position = CGPoint(x: self.downArrow.position.x, y: self.leftArrow.position.y + self.leftArrow.size.height*0.8)
         addChild(self.upArrow)
         
-//        while(isTouched == true){
-//            self.movePlayer()
-//        }
-        //self.buildTower()
-        
-        
-        
     }
-//    func spawnBullet() {
-//        // 1. Make a bullet
-//
-//        let bullet = player.bulletPiece
-//        bullet.size.width = self.size.width/2
-//        bullet.size.height = self.size.height/2
-//
-//        if(self.bulletsArray.count == 0){
-//            bullet.position = CGPoint(x: self.player.position.x-100, y: self.player.position.y)
-//            //addChild(bullet)
-//        }
-//        else{
-//            let previousBullet = self.bulletsArray[self.bulletsArray.count - 1]
-//            bullet.position = CGPoint(x: previousBullet.position.x-200, y: self.player.position.y)
-//            //addChild(bullet)
-//        }
-//        addChild(bullet)
-//        self.bulletsArray.append(bullet)
-//        print("size of bullets: \(self.bulletsArray.count)")
-//        print("x of bullet: \(self.bulletsArray[self.bulletsArray.count-1].position.x)" )
-//    }
+    
     func spawnPlayerBullet() {
         // 1. Make a bullet
-        
-        //self.bullet = Bullet(imageNamed: "player_bullet")
         let playerBullet = Bullet(imageNamed: "player_bullet")
         playerBullet.size.width = self.player.size.width/2
         playerBullet.size.height = self.player.size.height/2
@@ -110,17 +81,11 @@ class GameScene: SKScene {
         let moveBullet = SKAction.moveBy(x: -50, y: 0, duration: 0.05)
         let indefiniteBulletMove = SKAction.repeatForever(moveBullet)
         playerBullet.run(indefiniteBulletMove)
-        
-        
-        
+   
         print("size of bullets: \(self.bulletsArray.count)")
         print("x of bullet: \(self.bulletsArray[self.bulletsArray.count-1].position.x)" )
     }
-//    func buildTower() {
-//        for _ in 0...5 {
-//            self.spawnPlayerBullet()
-//        }
-//    }
+
     func movePlayer(){
         if ((self.arrowTouched == "up")&&(self.player.position.y < self.size.height)){
             let playerMove = SKAction.moveBy(x: 0, y: 30, duration: 0.01)
@@ -128,120 +93,86 @@ class GameScene: SKScene {
             //self.player.position.y = self.player.position.y + 5
         }
         else if (self.arrowTouched == "down")&&(self.player.position.y > 0){
-            //self.player.position.y = self.player.position.y - 5
+            
             let playerMove = SKAction.moveBy(x: 0, y: -30, duration: 0.01)
             self.player.run(playerMove)
         }
         else if (self.arrowTouched == "left")&&(self.player.position.x > 0 ){
             let playerMove = SKAction.moveBy(x: -30, y: 0, duration: 0.01)
             self.player.run(playerMove)
-            //self.player.position.x = self.player.position.x - 10
+           
         }
         else if (self.arrowTouched == "right")&&(self.player.position.x < self.size.width){
             let playerMove = SKAction.moveBy(x: 30, y: 0, duration: 0.01)
             self.player.run(playerMove)
-            //self.player.position.x = self.player.position.x + 10
+            
         }
         
-       // let indefiniteBulletMove = SKAction.repeatForever(moveBullet)
-        
-//        else if (self.arrowTouched == "") {
-//            self.player.position = self.player.position
-//        }
-        //self.player.texture = SKTexture(imageNamed: "up")
-        
     }
-    //var numLoops = 0
-    override func update(_ currentTime: TimeInterval) {
+    
+    func spriteTouched(){
         
-//        numLoops = numLoops + 1
-//        if (numLoops % 30 == 0) {
-//            // make a cat
-//            while(isTouched == true){
-//            self.movePlayer()
-//        }
+        if self.upArrow.contains(touch) {
+            print("up touched")
+            self.arrowTouched = "up"
+        }
+        else if self.downArrow.contains(touch) {
+            print("down touched")
+            self.arrowTouched = "down"
+        }
+        else if self.leftArrow.contains(touch) {
+            print("left touched")
+            self.arrowTouched = "left"
+            //self.player.size.height = self.player.size.height - self.player.size.height/3
+            let facingLeft = SKAction.scaleX(to: 1, duration: 0)
+            self.player.run(facingLeft)
+        }
+        else if self.rightArrow.contains(touch) {
+            print("right touched")
+            self.arrowTouched = "right"
+            //self.player.size.height = self.player.size.height + self.player.size.height/3
+            let facingRight = SKAction.scaleX(to: -1, duration: 0)
+            self.player.run(facingRight)
+        }
+        if (self.touchMoving == false) {
+            if (self.arrowTouched == "right")||(self.arrowTouched == "left"){
+            self.player.size.height = self.player.size.height - self.player.size.height/3
+            }
+//            else if (self.arrowTouched == "left"){
+//                self.player.size.height = self.player.size.height - self.player.size.height/3
+//            }
+        }
+        else{
+            self.spawnPlayerBullet()
+        }
     }
     
     override
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         self.view?.isMultipleTouchEnabled = true
-        self.touch = touches.first!
-        //let touch = event!.allTouches!.first!
-        //self.isTouched = true
-        if self.upArrow.contains(touch.location(in: self)) {
-            print("up touched")
-            self.arrowTouched = "up"
-            //self.player.position.y = self.player.position.y + 20
-        }
-        else if self.downArrow.contains(touch.location(in: self)) {
-            print("down touched")
-            self.arrowTouched = "down"
-            //self.player.position.y = self.player.position.y - 20
-        }
-        else if self.leftArrow.contains(touch.location(in: self)) {
-            print("left touched")
-            self.arrowTouched = "left"
-            self.player.size.height = self.player.size.height - self.player.size.height/3
-            //self.player.position.x = self.player.position.x - 20
-        }
-        else if self.rightArrow.contains(touch.location(in: self)) {
-            print("right touched")
-            self.arrowTouched = "right"
-            self.player.size.height = self.player.size.height + self.player.size.height/3
-            //self.player.position.x = self.player.position.x + 20
-        }
-        else{
-            self.spawnPlayerBullet()
-        }
+        self.touch = touches.first!.location(in: self)
         
-        //self.movePlayer()
+        self.spriteTouched()
         self.callback()
         
         guard let mousePosition = touches.first?.location(in: self) else {
             return
         }
-        
         print(mousePosition)
         
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view?.isMultipleTouchEnabled = true
-        self.touch = touches.first!
-        //self.isTouched = true
-        if self.upArrow.contains(touch.location(in: self)) {
-            print("up touched")
-            self.arrowTouched = "up"
-            //self.player.position.y = self.player.position.y + 20
-        }
-        else if self.downArrow.contains(touch.location(in: self)) {
-            print("down touched")
-            self.arrowTouched = "down"
-            //self.player.position.y = self.player.position.y - 20
-        }
-        else if self.leftArrow.contains(touch.location(in: self)) {
-            print("left touched")
-            self.arrowTouched = "left"
-            let facingLeft = SKAction.scaleX(to: 1, duration: 0)
-            self.player.run(facingLeft)
-            //self.player.size.height = self.player.size.height - self.player.size.height/3
-            //self.player.position.x = self.player.position.x - 20
-        }
-        else if self.rightArrow.contains(touch.location(in: self)) {
-            print("right touched")
-            self.arrowTouched = "right"
-            let facingRight = SKAction.scaleX(to: -1, duration: 0)
-            self.player.run(facingRight)
-            //self.player.size.height = self.player.size.height + self.player.size.height/3
-            //self.player.position.x = self.player.position.x + 20
-        }
-        self.movePlayer()
+        self.touchMoving = true
         //self.callback()
+        self.spriteTouched()
+        self.movePlayer()
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.arrowTouched = ""
-        //self.isTouched = false
+        self.touchMoving = false
         self.player.size.height = self.size.height/10
         //self.player.texture = SKTexture(imageNamed: "player")
     }
