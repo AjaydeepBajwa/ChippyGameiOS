@@ -16,7 +16,7 @@ class GameScene: SKScene {
     //var playerBullet: SKSpriteNode!
     var playerBullet:Bullet = Bullet(imageNamed: "player_bullet")
     var enemyBullet:Bullet = Bullet(imageNamed: "enemyBullet")
-    //var screenBorder:SKSpriteNode!
+    var screenBorder:SKSpriteNode!
     var bulletsArray:[SKSpriteNode] = []
     var upArrow:SKSpriteNode!
     var downArrow:SKSpriteNode!
@@ -35,6 +35,14 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         // Set the background color of the app
         self.backgroundColor = SKColor.black;
+        self.upArrow = (self.childNode(withName: "upArrow") as! SKSpriteNode)
+        self.downArrow = (self.childNode(withName: "downArrow") as! SKSpriteNode)
+        self.leftArrow = (self.childNode(withName: "leftArrow") as! SKSpriteNode)
+        self.rightArrow = (self.childNode(withName: "rightArrow") as! SKSpriteNode)
+        self.upLeftArrow = (self.childNode(withName: "upLeftArrow") as! SKSpriteNode)
+        self.upRightArrow = (self.childNode(withName: "upRightArrow") as! SKSpriteNode)
+        self.downLeftArrow = (self.childNode(withName: "downLeftArrow") as! SKSpriteNode)
+        self.downRightArrow = (self.childNode(withName: "downRightArrow") as! SKSpriteNode)
         let background = SKSpriteNode(imageNamed: "background")
         background.size = self.size
         background.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
@@ -46,13 +54,13 @@ class GameScene: SKScene {
         self.player = Player(imageNamed: "player")
         self.player.size.width = self.size.width/15
         self.player.size.height = self.size.height/12
-        self.player.position = CGPoint(x: self.size.width - 400, y: self.size.height / 2)
+        self.player.position = CGPoint(x: self.size.width*0.2, y: self.size.height / 2)
         addChild(self.player)
         
         self.enemy = Enemy(imageNamed: "enemy")
         self.enemy.size.width = self.size.width * 0.4
         self.enemy.size.height = self.size.height * 0.5
-        self.enemy.position = CGPoint(x: self.size.width / 2 - self.enemy.size.width*0.5, y: self.size.height/2)
+        self.enemy.position = CGPoint(x: self.size.width / 2 + self.enemy.size.width*0.5, y: self.size.height/2)
         addChild(self.enemy)
         
 //        let square = UIBezierPath(rect: CGRect(x: 0,y: 0, width: 50, height: 50))
@@ -65,46 +73,46 @@ class GameScene: SKScene {
         //self.enemy.run(SKAction.sequence([circleAnimation,reverseCircleAnimation]))
         self.enemy.run(SKAction.repeatForever(circleAnimation.reversed()))
         
-        self.leftArrow = SKSpriteNode(imageNamed: "left")
-        self.leftArrow.size = CGSize(width: self.size.width/25, height: self.size.height/20)
-        self.leftArrow.position = CGPoint(x: 100, y: 250)
-        addChild(self.leftArrow)
-        
-        self.downArrow = SKSpriteNode(imageNamed: "down")
-        self.downArrow.size = CGSize(width: self.size.height/20 , height: self.size.width/30)
-        self.downArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y - self.leftArrow.size.height*1.5)
-        addChild(self.downArrow)
-        
-        self.rightArrow = SKSpriteNode(imageNamed: "right")
-        self.rightArrow.size = CGSize(width: self.size.width/25, height: self.size.height/20)
-        self.rightArrow.position = CGPoint(x: self.downArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y)
-        addChild(self.rightArrow)
-        
-        self.upArrow = SKSpriteNode(imageNamed: "up")
-        self.upArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
-        self.upArrow.position = CGPoint(x: self.downArrow.position.x, y: self.leftArrow.position.y + self.leftArrow.size.height*1.5)
-        addChild(self.upArrow)
-        
-        self.upLeftArrow = SKSpriteNode(imageNamed: "upLeft")
-        self.upLeftArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
-        self.upLeftArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*0.7, y: self.upArrow.position.y - self.upArrow.size.height*0.7)
-        addChild(self.upLeftArrow)
-        
-        self.downLeftArrow = SKSpriteNode(imageNamed: "downLeft")
-        self.downLeftArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
-        self.downLeftArrow.position = CGPoint(x: self.upLeftArrow.position.x, y: self.downArrow.position.y + self.downArrow.size.height*0.7)
-        addChild(self.downLeftArrow)
-        
-        self.downRightArrow = SKSpriteNode(imageNamed: "downRight")
-        self.downRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
-        self.downRightArrow.position = CGPoint(x: self.rightArrow.position.x - self.rightArrow.size.width*0.7, y: self.downLeftArrow.position.y)
-        addChild(self.downRightArrow)
-        
-        self.upRightArrow = SKSpriteNode(imageNamed: "upRight")
-        self.upRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
-        self.upRightArrow.position = CGPoint(x: self.downRightArrow.position.x, y: self.upLeftArrow.position.y)
-        addChild(self.upRightArrow)
-        
+//        self.leftArrow = SKSpriteNode(imageNamed: "left")
+//        self.leftArrow.size = CGSize(width: self.size.width/17.9, height: self.size.height/7.7)
+//        self.leftArrow.position = CGPoint(x: 100, y: 250)
+//        addChild(self.leftArrow)
+//
+//        self.downArrow = SKSpriteNode(imageNamed: "down")
+//        self.downArrow.size = CGSize(width: self.size.width/10.4 , height: self.size.height/14)
+//        self.downArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y - self.leftArrow.size.height*1.5)
+//        addChild(self.downArrow)
+//
+//        self.rightArrow = SKSpriteNode(imageNamed: "right")
+//        self.rightArrow.size = CGSize(width: self.size.width/17.9, height: self.size.height/7.7)
+//        self.rightArrow.position = CGPoint(x: self.downArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y)
+//        addChild(self.rightArrow)
+//
+//        self.upArrow = SKSpriteNode(imageNamed: "up")
+//        self.upArrow.size = CGSize(width: self.size.width/10.4, height: self.size.height/14)
+//        self.upArrow.position = CGPoint(x: self.downArrow.position.x, y: self.leftArrow.position.y + self.leftArrow.size.height*1.5)
+//        addChild(self.upArrow)
+//
+//        self.upLeftArrow = SKSpriteNode(imageNamed: "upLeft")
+//        self.upLeftArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
+//        self.upLeftArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*0.7, y: self.upArrow.position.y - self.upArrow.size.height*0.7)
+//        addChild(self.upLeftArrow)
+//
+//        self.downLeftArrow = SKSpriteNode(imageNamed: "downLeft")
+//        self.downLeftArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
+//        self.downLeftArrow.position = CGPoint(x: self.upLeftArrow.position.x, y: self.downArrow.position.y + self.downArrow.size.height*0.7)
+//        addChild(self.downLeftArrow)
+//
+//        self.downRightArrow = SKSpriteNode(imageNamed: "downRight")
+//        self.downRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
+//        self.downRightArrow.position = CGPoint(x: self.rightArrow.position.x - self.rightArrow.size.width*0.7, y: self.downLeftArrow.position.y)
+//        addChild(self.downRightArrow)
+//
+//        self.upRightArrow = SKSpriteNode(imageNamed: "upRight")
+//        self.upRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
+//        self.upRightArrow.position = CGPoint(x: self.downRightArrow.position.x, y: self.upLeftArrow.position.y)
+//        addChild(self.upRightArrow)
+//
         
     }
     override func update(_ currentTime: TimeInterval) {
@@ -210,13 +218,16 @@ class GameScene: SKScene {
             print("No.of bullets: \(self.bulletsArray.count)")
             }
         }
+        if self.playerBullet.intersects(self.enemy) {
+            if(self.bulletsArray.count != 0){
+            self.bulletsArray.removeFirst()
+            self.playerBullet.removeFromParent()
+            //self.enemy
+            }
+        }
     }
     func moveBulletToTarget() {
-        // move the zombie towards the mouse
-        // @TODO: Get the android code for moving bullet towards enemey
-        // Implement the algorithm in Swift
-        // 1. calculate disatnce between mouse and zombie
-        
+       
         let movement1 = CGVector(
             dx: (self.mouseX - self.playerBullet.position.x)*5,
             dy: (self.mouseY - self.playerBullet.position.y)*5
@@ -225,24 +236,6 @@ class GameScene: SKScene {
         let actionTransaction = SKAction.move(by: movement1, duration: 3)
         let repeatAction = SKAction.repeat(actionTransaction, count: 3)
         self.playerBullet.run(repeatAction)
-        
-//        let a = (self.mouseX - self.playerBullet.position.x);
-//        let b = (self.mouseY - self.playerBullet.position.y);
-//        let distance = sqrt((a * a) + (b * b))
-//
-//        // 2. calculate the "rate" to move
-//        let xn = (a / distance)
-//        let yn = (b / distance)
-//
-//        // 3. move the bullet
-//        let moveBullet = SKAction.moveBy(x: xn*10, y: yn*10, duration: 0.5)
-//        //let moveBullet = SKAction.move(to: CGPoint(x: a , y: b ), duration: 0.5)
-//        let indefiniteBulletMove = SKAction.repeatForever(moveBullet)
-//        playerBullet.run(indefiniteBulletMove)
-//        //self.playerBullet.position.x = self.playerBullet.position.x + (xn * 10);
-//        //self.playerBullet.position.y = self.playerBullet.position.y + (yn * 10);
-//
-        
     }
 
     override
