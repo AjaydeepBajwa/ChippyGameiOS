@@ -65,6 +65,8 @@ class GameScene: SKScene {
         //let reverseCircleAnimation = circleAnimation.reversed()
         //self.enemy.run(SKAction.sequence([circleAnimation,reverseCircleAnimation]))
         self.enemy.run(SKAction.repeatForever(circleAnimation.reversed()))
+//        self.enemy.physicsBody = SKPhysicsBody(texture: self.enemy.texture ?? SKTexture(imageNamed: "enemy"), alphaThreshold: 0, size: self.enemy.size)
+        
         
         self.leftArrow = SKSpriteNode(imageNamed: "left")
 //        self.leftArrow.physicsBody = SKPhysicsBody(texture: self.leftArrow.texture!, size: self.leftArrow.texture!.size())
@@ -130,7 +132,7 @@ class GameScene: SKScene {
     func spawnPlayerBullet() {
         // 1. Make a bullet
         
-        if(self.bulletsArray.count <= 1){
+        if(self.bulletsArray.count <= 2){
             self.playerBullet = Bullet(imageNamed: "player_bullet")
             self.playerBullet.physicsBody = SKPhysicsBody(texture: SKTexture(imageNamed: "player_bullet"), size: self.playerBullet.size)
             self.playerBullet.physicsBody?.affectedByGravity = false
@@ -152,8 +154,8 @@ class GameScene: SKScene {
 //
         
         
-        print("size of bullets: \(self.bulletsArray.count)")
-        print("x of bullet: \(self.bulletsArray[self.bulletsArray.count-1].position.x)" )
+        //print("size of bullets: \(self.bulletsArray.count)")
+        //print("x of bullet: \(self.bulletsArray[self.bulletsArray.count-1].position.x)" )
     }
 
     func movePlayer(){
@@ -216,21 +218,25 @@ class GameScene: SKScene {
         
     }
     func removeBullet(){
-        //remove bullet after it hits screen edges / Enemy
-        //if (self.frame.contains(self.playerBullet.accessibilityFrame) == false){
-        if (self.playerBullet.position.x < 1)||(self.playerBullet.position.y > self.size.height)||(self.playerBullet.position.x > self.size.width)||(self.playerBullet.position.y < 0 ) {
+        
+        self.playerBullet.name = "playerBullet"
+        self.enumerateChildNodes(withName: "playerBullet") {
+            node, stop in
             if(self.bulletsArray.count != 0){
-                print("x of removed bullet: \(self.playerBullet.position.x)")
-                self.bulletsArray.removeAll()
-                self.playerBullet.removeFromParent()
-            print("No.of bullets: \(self.bulletsArray.count)")
-            }
-        }
-        if self.playerBullet.intersects(self.enemy) {
-            if(self.bulletsArray.count != 0){
-            self.bulletsArray.removeFirst()
-            self.playerBullet.removeFromParent()
-            //self.enemy
+            if (node is SKSpriteNode) {
+                let sprite = node as! SKSpriteNode
+                // Check if the node is not in the scene
+                if (sprite.position.x < 100 || sprite.position.x > self.size.width - 100 || sprite.position.y < 100 || sprite.position.y > self.size.height - 100) {
+                    // Remove the Sprite first from Parent then, from Array. else it does not completely removes the sprite and creates memory problems.
+                    sprite.removeFromParent()
+                    self.bulletsArray.removeFirst()
+                    print("outside")
+                }
+                if sprite.intersects(self.enemy) {
+                    sprite.removeFromParent()
+                    self.bulletsArray.removeFirst()
+                    }
+                }
             }
         }
     }
