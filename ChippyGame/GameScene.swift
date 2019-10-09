@@ -28,7 +28,6 @@ class GameScene: SKScene {
     var downRightArrow:SKSpriteNode!
     var arrowTouched:String = ""
     var touch:UITouch!
-    var isTouched:Bool = false
     var mouseX:CGFloat! = 100
     var mouseY:CGFloat! = 100
     var arrowButtonTouched = false
@@ -117,20 +116,19 @@ class GameScene: SKScene {
         
          self.arrowButtonsRect = CGRect(x: 0, y: 0, width: self.rightArrow.position.x + self.rightArrow.size.width/2, height: self.upArrow.position.y + self.upArrow.size.height/2)
     }
+    
     override func update(_ currentTime: TimeInterval) {
         if self.arrowButtonTouched == true {
             self.movePlayer()
         }
-//        if self.shootBullet == true{
-//            self.spawnPlayerBullet()
-//        }
+        if self.shootBullet == true{
+            self.spawnPlayerBullet()
+            self.moveBulletToTarget()
+        }
         self.removeBullet()
-        self.moveBulletToTarget()
     }
     func spawnPlayerBullet() {
         // 1. Make a bullet
-        
-       
         
         if(self.bulletsArray.count <= 1){
             self.playerBullet = Bullet(imageNamed: "player_bullet")
@@ -343,13 +341,10 @@ class GameScene: SKScene {
         }
         else {
             self.shootBullet = true
-            self.spawnPlayerBullet()
             //self.spawnBulletsCallBack()
             
         }
         
-        //self.movePlayer()
-        //self.callback()
         
         guard let mousePosition = touches.first?.location(in: self) else {
             return
@@ -372,15 +367,16 @@ class GameScene: SKScene {
             self.checkArrowTouched()
         }
         else{
-            self.shootBullet = true
+            self.shootBullet = false
             self.spawnPlayerBullet()
-            //self.moveBulletToTarget()
+            self.moveBulletToTarget()
         }
         
         //self.callback()
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.arrowTouched = ""
+        self.shootBullet = false
         self.arrowButtonTouched = false
         self.shootBullet = false
         self.player.size.height = self.size.height/12
@@ -396,10 +392,11 @@ class GameScene: SKScene {
             }
         }
     }
-        func spawnBulletsCallBack(){
+       @objc func spawnBulletsCallBack(){
             self.spawnPlayerBullet()
+        self.moveBulletToTarget()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                if (self.arrowTouched == ""){
+                if (self.shootBullet == true){
                     self.spawnBulletsCallBack()
                 }
             }
