@@ -31,6 +31,9 @@ class GameScene: SKScene {
     var isTouched:Bool = false
     var mouseX:CGFloat! = 100
     var mouseY:CGFloat! = 100
+    var arrowButtonTouched = false
+    var shootBullet = false
+    var arrowButtonsRect:CGRect!
     
     override func didMove(to view: SKView) {
         // Set the background color of the app
@@ -41,8 +44,7 @@ class GameScene: SKScene {
         background.zPosition = -1
         addChild(background)
         print("screen: \(self.size.width), \(self.size.height)")
-        
-        
+    
         self.player = Player(imageNamed: "player")
         self.player.size.width = self.size.width/15
         self.player.size.height = self.size.height/12
@@ -80,6 +82,7 @@ class GameScene: SKScene {
 //        self.rightArrow.physicsBody = SKPhysicsBody(texture: self.rightArrow.texture!, size: self.rightArrow.texture!.size())
         self.rightArrow.size = CGSize(width: self.size.width/25, height: self.size.height/20)
         self.rightArrow.position = CGPoint(x: self.downArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y)
+        print("righ : \(self.rightArrow.position.x)")
         addChild(self.rightArrow)
         
         self.upArrow = SKSpriteNode(imageNamed: "up")
@@ -112,9 +115,15 @@ class GameScene: SKScene {
         self.upRightArrow.position = CGPoint(x: self.downRightArrow.position.x, y: self.upLeftArrow.position.y)
         addChild(self.upRightArrow)
         
-        
+         self.arrowButtonsRect = CGRect(x: 0, y: 0, width: self.rightArrow.position.x + self.rightArrow.size.width/2, height: self.upArrow.position.y + self.upArrow.size.height/2)
     }
     override func update(_ currentTime: TimeInterval) {
+        if self.arrowButtonTouched == true {
+            self.movePlayer()
+        }
+//        if self.shootBullet == true{
+//            self.spawnPlayerBullet()
+//        }
         self.removeBullet()
         self.moveBulletToTarget()
     }
@@ -234,17 +243,17 @@ class GameScene: SKScene {
         //Caculating angle between a and b
         let angle = atan2(b, a)
         let angleDegrees = angle * (180 / CGFloat.pi);
-        print("Angle: \(angleDegrees)")
+        //print("Angle: \(angleDegrees)")
         // turning the bullet to destination direction
         self.playerBullet.zRotation = angle
         
         var destination1 = CGPoint.zero
         if b > 0 {
             // move bullet to the top of screen
-            destination1.y = self.size.height + self.playerBullet.size.width
+            destination1.y = self.size.height + self.enemy.size.height*2
         } else {
             // move bullet to the bottom of screen
-            destination1.y = -self.playerBullet.size.width
+            destination1.y = -self.enemy.size.height*2
         }
         // X position of destination in proportion to the the Y Position
         destination1.x = self.player.position.x +
@@ -253,10 +262,10 @@ class GameScene: SKScene {
         var destination2 = CGPoint.zero
         if a > 0 {
             // move the bullet to the right of screen
-            destination2.x = self.size.width
+            destination2.x = self.size.width + self.enemy.size.width*2
         } else {
             //move the bullet to the left of screen
-            destination2.x = -self.playerBullet.size.width
+            destination2.x = -self.enemy.size.width*2
         }
         destination2.y = self.player.position.y +
             ((destination2.x - self.player.position.x) / a * b)
@@ -269,35 +278,27 @@ class GameScene: SKScene {
         else {
             destination = destination2
         }
+        
         let distance = sqrt(pow(destination.x - self.player.position.x, 2) +
             pow(destination.y - self.player.position.y, 2))
         
+        let bulletVector = CGVector(dx: destination.x - self.player.position.x, dy: destination.y - self.player.position.y)
         // Shoot the bullet to destination
-        let duration = TimeInterval(distance/60)
-        let bulletMoveAcion = SKAction.move(to: destination, duration: duration)
-        self.playerBullet.run(bulletMoveAcion)
+        self.playerBullet.physicsBody?.velocity = bulletVector
+        //let duration = TimeInterval(distance/2500)
+        //let bulletMoveAcion = SKAction.move(to: destination, duration: duration)
+        //self.playerBullet.run(bulletMoveAcion)
     }
 
-    override
-    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        self.view?.isMultipleTouchEnabled = true
-        //self.touch = touches.first!
-        let touch = touches.first!
-        self.mouseX = touch.location(in: self).x
-        self.mouseY = touch.location(in: self).y
-    
-        self.player.size.height = self.player.size.height - self.player.size.height/3
+    func checkArrowTouched(){
         
         if self.upArrow.contains(touch.location(in: self)) {
             print("up touched")
             self.arrowTouched = "up"
-            
         }
         else if self.downArrow.contains(touch.location(in: self)) {
             print("down touched")
             self.arrowTouched = "down"
-
         }
         else if self.leftArrow.contains(touch.location(in: self)) {
             print("left touched")
@@ -323,14 +324,32 @@ class GameScene: SKScene {
             print("downLeft touched")
             self.arrowTouched = "downLeft"
         }
-        else{
+    }
+
+    override
+    func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.view?.isMultipleTouchEnabled = true
+        self.touch = touches.first!
+        //let touch = touches.first!
+        self.mouseX = touch.location(in: self).x
+        self.mouseY = touch.location(in: self).y
+    
+        self.player.size.height = self.player.size.height - self.player.size.height/3
+    
+        if (self.arrowButtonsRect.contains(touch.location(in: self))){
+            self.arrowButtonTouched = true
+            self.checkArrowTouched()
+        }
+        else {
+            self.shootBullet = true
             self.spawnPlayerBullet()
             //self.spawnBulletsCallBack()
             
         }
         
         //self.movePlayer()
-        self.callback()
+        //self.callback()
         
         guard let mousePosition = touches.first?.location(in: self) else {
             return
@@ -342,54 +361,28 @@ class GameScene: SKScene {
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view?.isMultipleTouchEnabled = true
-        //self.touch = touches.first!
-        let touch = touches.first!
+        self.touch = touches.first!
+        //let touch = touches.first!
         
         self.mouseX = touch.location(in: self).x
         self.mouseY = touch.location(in: self).y
         
-        if self.upArrow.contains(touch.location(in: self)) {
-            print("up touched")
-            self.arrowTouched = "up"
+        if (self.arrowButtonsRect.contains(touch.location(in: self))){
+            self.arrowButtonTouched = true
+            self.checkArrowTouched()
         }
-        else if self.downArrow.contains(touch.location(in: self)) {
-            print("down touched")
-            self.arrowTouched = "down"
-            
-        }
-        else if self.leftArrow.contains(touch.location(in: self)) {
-            print("left touched")
-            self.arrowTouched = "left"
-
-        }
-        else if self.rightArrow.contains(touch.location(in: self)) {
-            print("right touched")
-            self.arrowTouched = "right"
-        }
-        else if self.upRightArrow.contains(touch.location(in: self)) {
-            print("UpRight touched")
-            self.arrowTouched = "upRight"
-        }
-        else if self.downRightArrow.contains(touch.location(in: self)) {
-            print("downRight touched")
-            self.arrowTouched = "downRight"
-        }
-        else if self.upLeftArrow.contains(touch.location(in: self)) {
-            print("upLeft touched")
-            self.arrowTouched = "upLeft"
-        }
-        else if self.downLeftArrow.contains(touch.location(in: self)) {
-            print("downLeft touched")
-            self.arrowTouched = "downLeft"
+        else{
+            self.shootBullet = true
+            self.spawnPlayerBullet()
+            //self.moveBulletToTarget()
         }
         
-        self.spawnPlayerBullet()
-        self.moveBulletToTarget()
-        self.movePlayer()
         //self.callback()
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.arrowTouched = ""
+        self.arrowButtonTouched = false
+        self.shootBullet = false
         self.player.size.height = self.size.height/12
         //self.player.texture = SKTexture(imageNamed: "player")
     }
