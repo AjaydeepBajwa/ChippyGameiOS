@@ -229,85 +229,53 @@ class GameScene: SKScene {
     }
     func moveBulletToTarget() {
        
-        let movement1 = CGVector(
-            dx: (self.mouseX - self.playerBullet.position.x)*5,
-            dy: (self.mouseY - self.playerBullet.position.y)*5
-        )
         let a = (self.mouseX - self.player.position.x);
         let b = (self.mouseY - self.player.position.y);
-        //let distance = sqrt((a * a) + (b * b))
-        //let xn = (a / distance)
-        //let yn = (b / distance)
-        
+        //Caculating angle between a and b
         let angle = atan2(b, a)
-        let bearingDegrees = angle * (180 / CGFloat.pi);
-        print("Angle: \(bearingDegrees)")
+        let angleDegrees = angle * (180 / CGFloat.pi);
+        print("Angle: \(angleDegrees)")
+        // turning the bullet to destination direction
         self.playerBullet.zRotation = angle
         
-        self.playerBullet.position = CGPoint(x:self.playerBullet.position.x + cos(self.playerBullet.zRotation) * 100,y:self.playerBullet.position.y + sin(self.playerBullet.zRotation) * 100)
+        var destination1 = CGPoint.zero
+        if b > 0 {
+            // move bullet to the top of screen
+            destination1.y = self.size.height + self.playerBullet.size.width
+        } else {
+            // move bullet to the bottom of screen
+            destination1.y = -self.playerBullet.size.width
+        }
+        // X position of destination in proportion to the the Y Position
+        destination1.x = self.player.position.x +
+            ((destination1.y - self.player.position.y) / b * a)
         
-//        var destination1 = CGPoint.zero
-//        if b > 0 {
-//            // move bullet to the top of screen
-//            destination1.y = self.size.height + self.playerBullet.size.width
-//        } else {
-//            // move bullet to the bottom of screen
-//            destination1.y = -self.playerBullet.size.width
-//        }
-//        // X position of destination in proportion to the the Y Position
-//        destination1.x = self.player.position.x +
-//            ((destination1.y - self.player.position.y) / b * a)
-//
-//
-//        var destination2 = CGPoint.zero
-//        if a > 0 {
-//            // move the bullet to the right of screen
-//            destination2.x = self.size.width
-//        } else {
-//            //move the bullet to the left of screen
-//            destination2.x = -self.playerBullet.size.width
-//        }
-//        destination2.y = self.player.position.y +
-//            ((destination2.x - self.player.position.x) / a * b)
-//
-//
-//        var destination = destination2
-//        //comparing the absolute Coordinate values of destination
-//        if abs(destination1.x) < abs(destination2.x) || abs(destination1.y) < abs(destination2.y) {
-//            destination = destination1
-//        }
-//
-//        let distance = sqrt(pow(destination.x - self.player.position.x, 2) +
-//            pow(destination.y - self.player.position.y, 2))
-//        //let distance = sqrt(pow(self.mouseX - self.playerBullet.position.x, 2) +
-//            //pow(self.mouseY - self.playerBullet.position.y, 2))
-//
-//        self.playerBullet.physicsBody?.applyForce(CGVector(dx: destination.x - self.player.position.x, dy: destination.y - self.player.position.y))
-//        // run the sequence of actions for the firing
-//        let duration = TimeInterval(distance/60)
-        //let missileMoveAction = SKAction.move(to: destination, duration: duration)
-        //self.playerBullet.run(missileMoveAction)
-            //self.playerMissileSprite.isHidden = true
-        // 2. calculate the "rate" to move
-//        let xn = cos(angle) * 10
-//        let yn = sin(angle) * 10
-//      self.playerBullet.physicsBody?.applyAngularImpulse(bearingDegrees)
-//        self.playerBullet.physicsBody?.angularVelocity = bearingDegrees
-//
-////        self.playerBullet.physicsBody?.angularVelocity = 100
-//        self.playerBullet.physicsBody?.applyTorque(100)
+        var destination2 = CGPoint.zero
+        if a > 0 {
+            // move the bullet to the right of screen
+            destination2.x = self.size.width
+        } else {
+            //move the bullet to the left of screen
+            destination2.x = -self.playerBullet.size.width
+        }
+        destination2.y = self.player.position.y +
+            ((destination2.x - self.player.position.x) / a * b)
         
-        // 3. move the bullet
-      //  self.playerBullet.position.x = self.playerBullet.position.x + (xn * 10);
-       // self.playerBullet.position.y = self.playerBullet.position.y + (yn * 10);
-
-        //self.playerBullet.physicsBody?.applyAngularImpulse(10)
+        var destination:CGPoint!
+        //comparing the absolute Coordinate values of destination
+        if abs(destination1.x) < abs(destination2.x) || abs(destination1.y) < abs(destination2.y) {
+            destination = destination1
+        }
+        else {
+            destination = destination2
+        }
+        let distance = sqrt(pow(destination.x - self.player.position.x, 2) +
+            pow(destination.y - self.player.position.y, 2))
         
-        //self.playerBullet.physicsBody?.applyImpulse(movement1)
-        
-//       let actionTransaction = SKAction.move(by: movement1, duration: 1)
-////        let repeatAction = SKAction.repeat(actionTransaction, count: 3)
-//        self.playerBullet.run(actionTransaction)
+        // Shoot the bullet to destination
+        let duration = TimeInterval(distance/60)
+        let bulletMoveAcion = SKAction.move(to: destination, duration: duration)
+        self.playerBullet.run(bulletMoveAcion)
     }
 
     override
@@ -364,7 +332,6 @@ class GameScene: SKScene {
         //self.movePlayer()
         self.callback()
         
-        
         guard let mousePosition = touches.first?.location(in: self) else {
             return
         }
@@ -416,7 +383,6 @@ class GameScene: SKScene {
             self.arrowTouched = "downLeft"
         }
         
-
         self.spawnPlayerBullet()
         self.moveBulletToTarget()
         self.movePlayer()
