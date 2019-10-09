@@ -16,7 +16,7 @@ class GameScene: SKScene {
     //var playerBullet: SKSpriteNode!
     var playerBullet:Bullet = Bullet(imageNamed: "player_bullet")
     var enemyBullet:Bullet = Bullet(imageNamed: "enemyBullet")
-    var screenBorder:SKSpriteNode!
+    //var screenBorder:SKSpriteNode!
     var bulletsArray:[SKSpriteNode] = []
     var upArrow:SKSpriteNode!
     var downArrow:SKSpriteNode!
@@ -35,14 +35,6 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         // Set the background color of the app
         self.backgroundColor = SKColor.black;
-        self.upArrow = (self.childNode(withName: "upArrow") as! SKSpriteNode)
-        self.downArrow = (self.childNode(withName: "downArrow") as! SKSpriteNode)
-        self.leftArrow = (self.childNode(withName: "leftArrow") as! SKSpriteNode)
-        self.rightArrow = (self.childNode(withName: "rightArrow") as! SKSpriteNode)
-        self.upLeftArrow = (self.childNode(withName: "upLeftArrow") as! SKSpriteNode)
-        self.upRightArrow = (self.childNode(withName: "upRightArrow") as! SKSpriteNode)
-        self.downLeftArrow = (self.childNode(withName: "downLeftArrow") as! SKSpriteNode)
-        self.downRightArrow = (self.childNode(withName: "downRightArrow") as! SKSpriteNode)
         let background = SKSpriteNode(imageNamed: "background")
         background.size = self.size
         background.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
@@ -73,46 +65,53 @@ class GameScene: SKScene {
         //self.enemy.run(SKAction.sequence([circleAnimation,reverseCircleAnimation]))
         self.enemy.run(SKAction.repeatForever(circleAnimation.reversed()))
         
-//        self.leftArrow = SKSpriteNode(imageNamed: "left")
-//        self.leftArrow.size = CGSize(width: self.size.width/17.9, height: self.size.height/7.7)
-//        self.leftArrow.position = CGPoint(x: 100, y: 250)
-//        addChild(self.leftArrow)
-//
-//        self.downArrow = SKSpriteNode(imageNamed: "down")
-//        self.downArrow.size = CGSize(width: self.size.width/10.4 , height: self.size.height/14)
-//        self.downArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y - self.leftArrow.size.height*1.5)
-//        addChild(self.downArrow)
-//
-//        self.rightArrow = SKSpriteNode(imageNamed: "right")
-//        self.rightArrow.size = CGSize(width: self.size.width/17.9, height: self.size.height/7.7)
-//        self.rightArrow.position = CGPoint(x: self.downArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y)
-//        addChild(self.rightArrow)
-//
-//        self.upArrow = SKSpriteNode(imageNamed: "up")
-//        self.upArrow.size = CGSize(width: self.size.width/10.4, height: self.size.height/14)
-//        self.upArrow.position = CGPoint(x: self.downArrow.position.x, y: self.leftArrow.position.y + self.leftArrow.size.height*1.5)
-//        addChild(self.upArrow)
-//
-//        self.upLeftArrow = SKSpriteNode(imageNamed: "upLeft")
-//        self.upLeftArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
-//        self.upLeftArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*0.7, y: self.upArrow.position.y - self.upArrow.size.height*0.7)
-//        addChild(self.upLeftArrow)
-//
-//        self.downLeftArrow = SKSpriteNode(imageNamed: "downLeft")
-//        self.downLeftArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
-//        self.downLeftArrow.position = CGPoint(x: self.upLeftArrow.position.x, y: self.downArrow.position.y + self.downArrow.size.height*0.7)
-//        addChild(self.downLeftArrow)
-//
-//        self.downRightArrow = SKSpriteNode(imageNamed: "downRight")
-//        self.downRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
-//        self.downRightArrow.position = CGPoint(x: self.rightArrow.position.x - self.rightArrow.size.width*0.7, y: self.downLeftArrow.position.y)
-//        addChild(self.downRightArrow)
-//
-//        self.upRightArrow = SKSpriteNode(imageNamed: "upRight")
-//        self.upRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
-//        self.upRightArrow.position = CGPoint(x: self.downRightArrow.position.x, y: self.upLeftArrow.position.y)
-//        addChild(self.upRightArrow)
-//
+        self.leftArrow = SKSpriteNode(imageNamed: "left")
+//        self.leftArrow.physicsBody = SKPhysicsBody(texture: self.leftArrow.texture!, size: self.leftArrow.texture!.size())
+        self.leftArrow.size = CGSize(width: self.size.width/25, height: self.size.height/20)
+        self.leftArrow.position = CGPoint(x: 100, y: 250)
+        addChild(self.leftArrow)
+        
+        self.downArrow = SKSpriteNode(imageNamed: "down")
+        self.downArrow.size = CGSize(width: self.size.height/20 , height: self.size.width/30)
+        self.downArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y - self.leftArrow.size.height*1.5)
+        addChild(self.downArrow)
+        
+        self.rightArrow = SKSpriteNode(imageNamed: "right")
+//        self.rightArrow.physicsBody = SKPhysicsBody(texture: self.rightArrow.texture!, size: self.rightArrow.texture!.size())
+        self.rightArrow.size = CGSize(width: self.size.width/25, height: self.size.height/20)
+        self.rightArrow.position = CGPoint(x: self.downArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y)
+        addChild(self.rightArrow)
+        
+        self.upArrow = SKSpriteNode(imageNamed: "up")
+//        self.upArrow.physicsBody = SKPhysicsBody(texture: self.upArrow.texture!, size: self.upArrow.texture!.size())
+        self.upArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
+        self.upArrow.position = CGPoint(x: self.downArrow.position.x, y: self.leftArrow.position.y + self.leftArrow.size.height*1.5)
+        addChild(self.upArrow)
+        
+        self.upLeftArrow = SKSpriteNode(imageNamed: "upLeft")
+//        self.upLeftArrow.physicsBody = SKPhysicsBody(texture: self.upLeftArrow.texture!, size: self.upLeftArrow.texture!.size())
+        self.upLeftArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
+        self.upLeftArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*0.7, y: self.upArrow.position.y - self.upArrow.size.height*0.7)
+        addChild(self.upLeftArrow)
+        
+        self.downLeftArrow = SKSpriteNode(imageNamed: "downLeft")
+//        self.downLeftArrow.physicsBody = SKPhysicsBody(texture: self.downLeftArrow.texture!, size: self.downLeftArrow.texture!.size())
+        self.downLeftArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
+        self.downLeftArrow.position = CGPoint(x: self.upLeftArrow.position.x, y: self.downArrow.position.y + self.downArrow.size.height*0.7)
+        addChild(self.downLeftArrow)
+        
+        self.downRightArrow = SKSpriteNode(imageNamed: "downRight")
+//    self.downRightArrow.physicsBody = SKPhysicsBody(texture: self.downRightArrow.texture!, size: self.downRightArrow.texture!.size())
+        self.downRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
+        self.downRightArrow.position = CGPoint(x: self.rightArrow.position.x - self.rightArrow.size.width*0.7, y: self.downLeftArrow.position.y)
+        addChild(self.downRightArrow)
+        
+        self.upRightArrow = SKSpriteNode(imageNamed: "upRight")
+//         self.upRightArrow.physicsBody = SKPhysicsBody(texture: self.upRightArrow.texture!, size: self.upRightArrow.texture!.size())
+        self.upRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
+        self.upRightArrow.position = CGPoint(x: self.downRightArrow.position.x, y: self.upLeftArrow.position.y)
+        addChild(self.upRightArrow)
+        
         
     }
     override func update(_ currentTime: TimeInterval) {
@@ -126,6 +125,8 @@ class GameScene: SKScene {
         
         if(self.bulletsArray.count <= 1){
             self.playerBullet = Bullet(imageNamed: "player_bullet")
+            self.playerBullet.physicsBody = SKPhysicsBody(texture: SKTexture(imageNamed: "player_bullet"), size: self.playerBullet.size)
+            self.playerBullet.physicsBody?.affectedByGravity = false
             playerBullet.size.width = self.player.size.width/2
             playerBullet.size.height = self.player.size.height/2
         playerBullet.position = CGPoint(x: self.player.position.x - 30, y: self.player.position.y)
@@ -232,10 +233,81 @@ class GameScene: SKScene {
             dx: (self.mouseX - self.playerBullet.position.x)*5,
             dy: (self.mouseY - self.playerBullet.position.y)*5
         )
+        let a = (self.mouseX - self.player.position.x);
+        let b = (self.mouseY - self.player.position.y);
+        //let distance = sqrt((a * a) + (b * b))
+        //let xn = (a / distance)
+        //let yn = (b / distance)
         
-        let actionTransaction = SKAction.move(by: movement1, duration: 3)
-        let repeatAction = SKAction.repeat(actionTransaction, count: 3)
-        self.playerBullet.run(repeatAction)
+        let angle = atan2(b, a)
+        let bearingDegrees = angle * (180 / CGFloat.pi);
+        print("Angle: \(bearingDegrees)")
+        self.playerBullet.zRotation = angle
+        
+        self.playerBullet.position = CGPoint(x:self.playerBullet.position.x + cos(self.playerBullet.zRotation) * 100,y:self.playerBullet.position.y + sin(self.playerBullet.zRotation) * 100)
+        
+//        var destination1 = CGPoint.zero
+//        if b > 0 {
+//            // move bullet to the top of screen
+//            destination1.y = self.size.height + self.playerBullet.size.width
+//        } else {
+//            // move bullet to the bottom of screen
+//            destination1.y = -self.playerBullet.size.width
+//        }
+//        // X position of destination in proportion to the the Y Position
+//        destination1.x = self.player.position.x +
+//            ((destination1.y - self.player.position.y) / b * a)
+//
+//
+//        var destination2 = CGPoint.zero
+//        if a > 0 {
+//            // move the bullet to the right of screen
+//            destination2.x = self.size.width
+//        } else {
+//            //move the bullet to the left of screen
+//            destination2.x = -self.playerBullet.size.width
+//        }
+//        destination2.y = self.player.position.y +
+//            ((destination2.x - self.player.position.x) / a * b)
+//
+//
+//        var destination = destination2
+//        //comparing the absolute Coordinate values of destination
+//        if abs(destination1.x) < abs(destination2.x) || abs(destination1.y) < abs(destination2.y) {
+//            destination = destination1
+//        }
+//
+//        let distance = sqrt(pow(destination.x - self.player.position.x, 2) +
+//            pow(destination.y - self.player.position.y, 2))
+//        //let distance = sqrt(pow(self.mouseX - self.playerBullet.position.x, 2) +
+//            //pow(self.mouseY - self.playerBullet.position.y, 2))
+//
+//        self.playerBullet.physicsBody?.applyForce(CGVector(dx: destination.x - self.player.position.x, dy: destination.y - self.player.position.y))
+//        // run the sequence of actions for the firing
+//        let duration = TimeInterval(distance/60)
+        //let missileMoveAction = SKAction.move(to: destination, duration: duration)
+        //self.playerBullet.run(missileMoveAction)
+            //self.playerMissileSprite.isHidden = true
+        // 2. calculate the "rate" to move
+//        let xn = cos(angle) * 10
+//        let yn = sin(angle) * 10
+//      self.playerBullet.physicsBody?.applyAngularImpulse(bearingDegrees)
+//        self.playerBullet.physicsBody?.angularVelocity = bearingDegrees
+//
+////        self.playerBullet.physicsBody?.angularVelocity = 100
+//        self.playerBullet.physicsBody?.applyTorque(100)
+        
+        // 3. move the bullet
+      //  self.playerBullet.position.x = self.playerBullet.position.x + (xn * 10);
+       // self.playerBullet.position.y = self.playerBullet.position.y + (yn * 10);
+
+        //self.playerBullet.physicsBody?.applyAngularImpulse(10)
+        
+        //self.playerBullet.physicsBody?.applyImpulse(movement1)
+        
+//       let actionTransaction = SKAction.move(by: movement1, duration: 1)
+////        let repeatAction = SKAction.repeat(actionTransaction, count: 3)
+//        self.playerBullet.run(actionTransaction)
     }
 
     override
