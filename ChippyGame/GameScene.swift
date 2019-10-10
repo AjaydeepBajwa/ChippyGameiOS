@@ -12,7 +12,8 @@ import GameplayKit
 class GameScene: SKScene {
     
     var player:Player = Player(imageNamed: "player")
-    var enemy:Enemy = Enemy(imageNamed: "enemy")
+    //var enemy:Enemy = Enemy(imageNamed: "enemy")
+    var enemy:SKSpriteNode!
     //var playerBullet: SKSpriteNode!
     var playerBullet:Bullet = Bullet(imageNamed: "player_bullet")
     var enemyBullet:Bullet = Bullet(imageNamed: "enemyBullet")
@@ -50,22 +51,25 @@ class GameScene: SKScene {
         self.player.position = CGPoint(x: self.size.width*0.2, y: self.size.height / 2)
         addChild(self.player)
         
-        self.enemy = Enemy(imageNamed: "enemy")
-        self.enemy.size.width = self.size.width * 0.4
-        self.enemy.size.height = self.size.height * 0.5
-        self.enemy.position = CGPoint(x: self.size.width / 2 + self.enemy.size.width*0.5, y: self.size.height/2)
-        addChild(self.enemy)
+        self.enemy = self.scene?.childNode(withName: "enemy") as! SKSpriteNode
+//        self.enemy = Enemy(imageNamed: "enemy")
+//        self.enemy.size.width = self.size.width * 0.4
+//        self.enemy.size.height = self.size.height * 0.5
+//        self.enemy.position = CGPoint(x: self.size.width / 2 + self.enemy.size.width*0.5, y: self.size.height/2)
+//        addChild(self.enemy)
         
 //        let square = UIBezierPath(rect: CGRect(x: 0,y: 0, width: 50, height: 50))
 //        let followSquare = SKAction.follow(square.cgPath, asOffset: true, orientToPath: false, duration: 5.0)
         let circle = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 30, height: 50), cornerRadius: 30)
         let followCircle = SKAction.follow(circle.cgPath, asOffset: true, orientToPath: false, duration: 5.0)
         let circleAnimation = followCircle.reversed()
-        
-        //let reverseCircleAnimation = circleAnimation.reversed()
-        //self.enemy.run(SKAction.sequence([circleAnimation,reverseCircleAnimation]))
+//
+//        //let reverseCircleAnimation = circleAnimation.reversed()
+//        //self.enemy.run(SKAction.sequence([circleAnimation,reverseCircleAnimation]))
         self.enemy.run(SKAction.repeatForever(circleAnimation.reversed()))
-//        self.enemy.physicsBody = SKPhysicsBody(texture: self.enemy.texture ?? SKTexture(imageNamed: "enemy"), alphaThreshold: 0, size: self.enemy.size)
+//        self.enemy.physicsBody = SKPhysicsBody(texture: self.enemy.texture ?? SKTexture(imageNamed: "enemy"), alphaThreshold: 0, size: (self.enemy.texture!.size()))
+//        self.enemy.physicsBody = SKPhysicsBody(texture: self.enemy.texture!, size: (self.enemy.texture!.size()))
+//        self.enemy.physicsBody?.affectedByGravity = false
         
         
         self.leftArrow = SKSpriteNode(imageNamed: "left")
@@ -128,6 +132,7 @@ class GameScene: SKScene {
             self.moveBulletToTarget()
         }
         self.removeBullet()
+        self.bulletHitsEnemy()
     }
     func spawnPlayerBullet() {
         // 1. Make a bullet
@@ -233,6 +238,7 @@ class GameScene: SKScene {
                     print("outside")
                 }
                 if sprite.intersects(self.enemy) {
+                    self.enemy.physicsBody = nil
                     sprite.removeFromParent()
                     self.bulletsArray.removeFirst()
                     }
@@ -292,6 +298,28 @@ class GameScene: SKScene {
         //let duration = TimeInterval(distance/2500)
         //let bulletMoveAcion = SKAction.move(to: destination, duration: duration)
         //self.playerBullet.run(bulletMoveAcion)
+    }
+    
+    func bulletHitsEnemy(){
+        if self.playerBullet.intersects(self.enemy){
+            let cropNode = SKCropNode()
+            cropNode.position = CGPoint(x: 100, y: 100)
+            
+            cropNode.maskNode = SKSpriteNode(imageNamed: "enemy")
+            
+            var childNode = SKSpriteNode(imageNamed: "child")
+            childNode.position = CGPoint(x: 200, y: 200)
+            childNode.name = "character"
+            cropNode.addChild(childNode)
+            addChild(cropNode)
+////            self.enemy.texture?.textureRect().contains(CGRect(x: self.playerBullet.position.x, y: self.playerBullet.position.y, width: self.playerBullet.size.width, height: self.playerBullet.size.height))
+//            var pixelRect =  CGRect(x: self.playerBullet.position.x, y: self.playerBullet.position.y, width: self.playerBullet.size.width, height: self.playerBullet.size.height)
+//            var delTexture = SKTexture(rect: pixelRect, in: self.enemy.texture!)
+//            self.enemy.texture = self.enemy.texture - delTexture
+            
+//      self.enemy.color = .blue
+//        self.enemy.colorBlendFactor = 1.0
+        }
     }
 
     func checkArrowTouched(){
