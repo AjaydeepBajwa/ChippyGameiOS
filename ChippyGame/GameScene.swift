@@ -12,7 +12,6 @@ import GameplayKit
 class GameScene: SKScene {
     
     var player:Player = Player(imageNamed: "player")
-    //var enemy:Enemy = Enemy(imageNamed: "enemy")
     var enemy:SKSpriteNode!
     //var playerBullet: SKSpriteNode!
     var playerBullet:Bullet = Bullet(imageNamed: "player_bullet")
@@ -44,36 +43,24 @@ class GameScene: SKScene {
         background.zPosition = -1
         addChild(background)
         print("screen: \(self.size.width), \(self.size.height)")
-    
+        
         self.player = Player(imageNamed: "player")
         self.player.size.width = self.size.width/15
         self.player.size.height = self.size.height/12
         self.player.position = CGPoint(x: self.size.width*0.2, y: self.size.height / 2)
         addChild(self.player)
         
-        self.enemy = self.scene?.childNode(withName: "enemy") as! SKSpriteNode
-//        self.enemy = Enemy(imageNamed: "enemy")
-//        self.enemy.size.width = self.size.width * 0.4
-//        self.enemy.size.height = self.size.height * 0.5
-//        self.enemy.position = CGPoint(x: self.size.width / 2 + self.enemy.size.width*0.5, y: self.size.height/2)
-//        addChild(self.enemy)
-        
-//        let square = UIBezierPath(rect: CGRect(x: 0,y: 0, width: 50, height: 50))
-//        let followSquare = SKAction.follow(square.cgPath, asOffset: true, orientToPath: false, duration: 5.0)
         let circle = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 30, height: 50), cornerRadius: 30)
         let followCircle = SKAction.follow(circle.cgPath, asOffset: true, orientToPath: false, duration: 5.0)
         let circleAnimation = followCircle.reversed()
-//
-//        //let reverseCircleAnimation = circleAnimation.reversed()
-//        //self.enemy.run(SKAction.sequence([circleAnimation,reverseCircleAnimation]))
-        self.enemy.run(SKAction.repeatForever(circleAnimation.reversed()))
-//        self.enemy.physicsBody = SKPhysicsBody(texture: self.enemy.texture ?? SKTexture(imageNamed: "enemy"), alphaThreshold: 0, size: (self.enemy.texture!.size()))
-//        self.enemy.physicsBody = SKPhysicsBody(texture: self.enemy.texture!, size: (self.enemy.texture!.size()))
-//        self.enemy.physicsBody?.affectedByGravity = false
         
+        self.enumerateChildNodes(withName: "enemy") {
+            (node, stop) in
+            self.enemy = node as? SKSpriteNode
+            self.enemy.run(SKAction.repeatForever(circleAnimation.reversed()))
+        }
         
         self.leftArrow = SKSpriteNode(imageNamed: "left")
-//        self.leftArrow.physicsBody = SKPhysicsBody(texture: self.leftArrow.texture!, size: self.leftArrow.texture!.size())
         self.leftArrow.size = CGSize(width: self.size.width/25, height: self.size.height/20)
         self.leftArrow.position = CGPoint(x: 100, y: 250)
         addChild(self.leftArrow)
@@ -84,43 +71,37 @@ class GameScene: SKScene {
         addChild(self.downArrow)
         
         self.rightArrow = SKSpriteNode(imageNamed: "right")
-//        self.rightArrow.physicsBody = SKPhysicsBody(texture: self.rightArrow.texture!, size: self.rightArrow.texture!.size())
         self.rightArrow.size = CGSize(width: self.size.width/25, height: self.size.height/20)
         self.rightArrow.position = CGPoint(x: self.downArrow.position.x + self.leftArrow.size.width*1.5, y: self.leftArrow.position.y)
         print("righ : \(self.rightArrow.position.x)")
         addChild(self.rightArrow)
         
         self.upArrow = SKSpriteNode(imageNamed: "up")
-//        self.upArrow.physicsBody = SKPhysicsBody(texture: self.upArrow.texture!, size: self.upArrow.texture!.size())
         self.upArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
         self.upArrow.position = CGPoint(x: self.downArrow.position.x, y: self.leftArrow.position.y + self.leftArrow.size.height*1.5)
         addChild(self.upArrow)
         
         self.upLeftArrow = SKSpriteNode(imageNamed: "upLeft")
-//        self.upLeftArrow.physicsBody = SKPhysicsBody(texture: self.upLeftArrow.texture!, size: self.upLeftArrow.texture!.size())
         self.upLeftArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
         self.upLeftArrow.position = CGPoint(x: self.leftArrow.position.x + self.leftArrow.size.width*0.7, y: self.upArrow.position.y - self.upArrow.size.height*0.7)
         addChild(self.upLeftArrow)
         
         self.downLeftArrow = SKSpriteNode(imageNamed: "downLeft")
-//        self.downLeftArrow.physicsBody = SKPhysicsBody(texture: self.downLeftArrow.texture!, size: self.downLeftArrow.texture!.size())
         self.downLeftArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
         self.downLeftArrow.position = CGPoint(x: self.upLeftArrow.position.x, y: self.downArrow.position.y + self.downArrow.size.height*0.7)
         addChild(self.downLeftArrow)
         
         self.downRightArrow = SKSpriteNode(imageNamed: "downRight")
-//    self.downRightArrow.physicsBody = SKPhysicsBody(texture: self.downRightArrow.texture!, size: self.downRightArrow.texture!.size())
         self.downRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
         self.downRightArrow.position = CGPoint(x: self.rightArrow.position.x - self.rightArrow.size.width*0.7, y: self.downLeftArrow.position.y)
         addChild(self.downRightArrow)
         
         self.upRightArrow = SKSpriteNode(imageNamed: "upRight")
-//         self.upRightArrow.physicsBody = SKPhysicsBody(texture: self.upRightArrow.texture!, size: self.upRightArrow.texture!.size())
         self.upRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
         self.upRightArrow.position = CGPoint(x: self.downRightArrow.position.x, y: self.upLeftArrow.position.y)
         addChild(self.upRightArrow)
         
-         self.arrowButtonsRect = CGRect(x: 0, y: 0, width: self.rightArrow.position.x + self.rightArrow.size.width/2, height: self.upArrow.position.y + self.upArrow.size.height/2)
+        self.arrowButtonsRect = CGRect(x: 0, y: 0, width: self.rightArrow.position.x + self.rightArrow.size.width/2, height: self.upArrow.position.y + self.upArrow.size.height/2)
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -143,26 +124,13 @@ class GameScene: SKScene {
             self.playerBullet.physicsBody?.affectedByGravity = false
             playerBullet.size.width = self.player.size.width/2
             playerBullet.size.height = self.player.size.height/2
-        playerBullet.position = CGPoint(x: self.player.position.x - 30, y: self.player.position.y)
-        addChild(playerBullet)
-        self.bulletsArray.append(playerBullet)
+            playerBullet.position = CGPoint(x: self.player.position.x - 30, y: self.player.position.y)
+            addChild(playerBullet)
+            self.bulletsArray.append(playerBullet)
         }
-        //        else{
-        //            let previousBullet = self.bulletsArray[self.bulletsArray.count - 1]
-        //            playerBullet.position = CGPoint(x: previousBullet.position.x-200, y: self.player.position.y)
-        //            addChild(playerBullet)
-        //            self.bulletsArray.append(playerBullet)
-        //        }
-//        let moveBullet = SKAction.moveBy(x: -50, y: 0, duration: 0.05)
-//        let indefiniteBulletMove = SKAction.repeatForever(moveBullet)
-//        playerBullet.run(indefiniteBulletMove)
-//
-        
-        
-        //print("size of bullets: \(self.bulletsArray.count)")
-        //print("x of bullet: \(self.bulletsArray[self.bulletsArray.count-1].position.x)" )
+        print("No. of bullets: \(self.bulletsArray.count)")
     }
-
+    
     func movePlayer(){
         
         if ((self.arrowTouched == "up")&&(self.player.position.y < self.size.height)){
@@ -199,14 +167,14 @@ class GameScene: SKScene {
             self.player.zRotation = .pi / -4
             //self.player.position.x = self.player.position.x + 10
         }
-        
+            
         else if (self.arrowTouched == "downLeft")&&(self.player.position.x > 0)&&(self.player.position.y > 0){
             let playerMove = SKAction.moveBy(x: -30, y: -30, duration: 0.01)
             self.player.run(playerMove)
             self.player.zRotation = .pi / -1.5
             //self.player.position.x = self.player.position.x + 10
         }
-        
+            
         else if (self.arrowTouched == "upLeft")&&(self.player.position.x > 0)&&(self.player.position.y < self.size.height){
             let playerMove = SKAction.moveBy(x: -30, y: 30, duration: 0.01)
             self.player.run(playerMove)
@@ -228,26 +196,28 @@ class GameScene: SKScene {
         self.enumerateChildNodes(withName: "playerBullet") {
             node, stop in
             if(self.bulletsArray.count != 0){
-            if (node is SKSpriteNode) {
-                let sprite = node as! SKSpriteNode
-                // Check if the node is not in the scene
-                if (sprite.position.x < 100 || sprite.position.x > self.size.width - 100 || sprite.position.y < 100 || sprite.position.y > self.size.height - 100) {
-                    // Remove the Sprite first from Parent then, from Array. else it does not completely removes the sprite and creates memory problems.
-                    sprite.removeFromParent()
-                    self.bulletsArray.removeFirst()
-                    print("outside")
-                }
-                if sprite.intersects(self.enemy) {
-                    self.enemy.physicsBody = nil
-                    sprite.removeFromParent()
-                    self.bulletsArray.removeFirst()
+                if (node is SKSpriteNode) {
+                    let sprite = node as! SKSpriteNode
+                    // Check if the node is not in the scene
+                    if (sprite.position.x < 100 || sprite.position.x > self.size.width - 100 || sprite.position.y < 100 || sprite.position.y > self.size.height - 100) {
+                        // Remove the Sprite first from Parent then, from Array. else it does not completely removes the sprite and creates memory problems.
+                        sprite.removeFromParent()
+                        self.bulletsArray.removeFirst()
+                        print("no.of bullets(after crossing screen): \(self.bulletsArray.count)")
                     }
+                    if sprite.intersects(self.enemy) {
+                        self.enemy.physicsBody = nil
+                        sprite.removeFromParent()
+                        self.bulletsArray.removeFirst()
+                        print("no. of bullets after hitting: \(self.bulletsArray.count)")
+                    }
+                    
                 }
             }
         }
     }
     func moveBulletToTarget() {
-       
+        
         let a = (self.mouseX - self.player.position.x);
         let b = (self.mouseY - self.player.position.y);
         //Caculating angle between a and b
@@ -295,33 +265,20 @@ class GameScene: SKScene {
         let bulletVector = CGVector(dx: destination.x - self.player.position.x, dy: destination.y - self.player.position.y)
         // Shoot the bullet to destination
         self.playerBullet.physicsBody?.velocity = bulletVector
-        //let duration = TimeInterval(distance/2500)
-        //let bulletMoveAcion = SKAction.move(to: destination, duration: duration)
-        //self.playerBullet.run(bulletMoveAcion)
     }
     
     func bulletHitsEnemy(){
-        if self.playerBullet.intersects(self.enemy){
-            let cropNode = SKCropNode()
-            cropNode.position = CGPoint(x: 100, y: 100)
-            
-            cropNode.maskNode = SKSpriteNode(imageNamed: "enemy")
-            
-            var childNode = SKSpriteNode(imageNamed: "child")
-            childNode.position = CGPoint(x: 200, y: 200)
-            childNode.name = "character"
-            cropNode.addChild(childNode)
-            addChild(cropNode)
-////            self.enemy.texture?.textureRect().contains(CGRect(x: self.playerBullet.position.x, y: self.playerBullet.position.y, width: self.playerBullet.size.width, height: self.playerBullet.size.height))
-//            var pixelRect =  CGRect(x: self.playerBullet.position.x, y: self.playerBullet.position.y, width: self.playerBullet.size.width, height: self.playerBullet.size.height)
-//            var delTexture = SKTexture(rect: pixelRect, in: self.enemy.texture!)
-//            self.enemy.texture = self.enemy.texture - delTexture
-            
-//      self.enemy.color = .blue
-//        self.enemy.colorBlendFactor = 1.0
+        self.enumerateChildNodes(withName: "enemy") {
+            (node, stop) in
+            self.enemy = node as? SKSpriteNode
+            if self.playerBullet.intersects(self.enemy){
+                self.enemy.removeFromParent()
+                self.removeBullet()
+                print("enemy removed")
+            }
         }
     }
-
+    
     func checkArrowTouched(){
         
         if self.upArrow.contains(touch.location(in: self)) {
@@ -357,7 +314,7 @@ class GameScene: SKScene {
             self.arrowTouched = "downLeft"
         }
     }
-
+    
     override
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
@@ -366,9 +323,9 @@ class GameScene: SKScene {
         //let touch = touches.first!
         self.mouseX = touch.location(in: self).x
         self.mouseY = touch.location(in: self).y
-    
+        
         self.player.size.height = self.player.size.height - self.player.size.height/3
-    
+        
         if (self.arrowButtonsRect.contains(touch.location(in: self))){
             self.arrowButtonTouched = true
             self.checkArrowTouched()
@@ -376,7 +333,6 @@ class GameScene: SKScene {
         else {
             self.shootBullet = true
             //self.spawnBulletsCallBack()
-            
         }
         
         
@@ -426,14 +382,14 @@ class GameScene: SKScene {
             }
         }
     }
-       @objc func spawnBulletsCallBack(){
-            self.spawnPlayerBullet()
+    @objc func spawnBulletsCallBack(){
+        self.spawnPlayerBullet()
         self.moveBulletToTarget()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                if (self.shootBullet == true){
-                    self.spawnBulletsCallBack()
-                }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            if (self.shootBullet == true){
+                self.spawnBulletsCallBack()
             }
+        }
     }
     
 }
