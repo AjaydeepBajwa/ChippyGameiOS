@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene,SKPhysicsContactDelegate {
     
     var player:Player = Player(imageNamed: "player")
     var enemy:SKSpriteNode!
@@ -18,6 +18,7 @@ class GameScene: SKScene {
     var enemyBullet:Bullet = Bullet(imageNamed: "enemyBullet")
     //var screenBorder:SKSpriteNode!
     var bulletsArray:[SKSpriteNode] = []
+    var enemyBulletsArray:[SKSpriteNode] = []
     var upArrow:SKSpriteNode!
     var downArrow:SKSpriteNode!
     var leftArrow:SKSpriteNode!
@@ -36,6 +37,8 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         // Set the background color of the app
+        self.physicsWorld.contactDelegate = self
+        
         self.backgroundColor = SKColor.black;
         let background = SKSpriteNode(imageNamed: "background")
         background.size = self.size
@@ -112,8 +115,11 @@ class GameScene: SKScene {
             self.spawnPlayerBullet()
             self.moveBulletToTarget()
         }
+        self.spawnEnemyBullet()
+        self.moveEnemyBullets()
         self.removeBullet()
         self.bulletHitsEnemy()
+        
     }
     func spawnPlayerBullet() {
         // 1. Make a bullet
@@ -122,13 +128,38 @@ class GameScene: SKScene {
             self.playerBullet = Bullet(imageNamed: "player_bullet")
             self.playerBullet.physicsBody = SKPhysicsBody(texture: SKTexture(imageNamed: "player_bullet"), size: self.playerBullet.size)
             self.playerBullet.physicsBody?.affectedByGravity = false
-            playerBullet.size.width = self.player.size.width/2
-            playerBullet.size.height = self.player.size.height/2
-            playerBullet.position = CGPoint(x: self.player.position.x - 30, y: self.player.position.y)
-            addChild(playerBullet)
-            self.bulletsArray.append(playerBullet)
+            self.playerBullet.physicsBody?.categoryBitMask = 1
+            self.playerBullet.physicsBody?.collisionBitMask = 0
+            //self.playerBullet.physicsBody?.contactTestBitMask = 2
+            self.playerBullet.size.width = self.player.size.width/2
+            self.playerBullet.size.height = self.player.size.height/2
+            self.playerBullet.position = CGPoint(x: self.player.position.x - 30, y: self.player.position.y)
+            addChild(self.playerBullet)
+            self.bulletsArray.append(self.playerBullet)
         }
         print("No. of bullets: \(self.bulletsArray.count)")
+    }
+    func spawnEnemyBullet(){
+        
+        if (self.enemyBulletsArray.count <= 4){
+            self.enemyBullet = Bullet(imageNamed: "enemyBullet")
+            self.enemyBullet.position = CGPoint(x: 1480, y: 767)
+            self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
+            self.enemyBullet.physicsBody?.categoryBitMask = 3
+            self.enemyBullet.physicsBody?.collisionBitMask = 0
+            addChild(self.enemyBullet)
+            self.enemyBulletsArray.append(self.enemyBullet)
+        }
+    }
+    func moveEnemyBullets(){
+        let randomX = Int.random(in: 0...2250)
+        let randomY = Int.random(in: 0...1550)
+        
+        //for i in 0...3 {
+            let enemyBulletAction = SKAction.applyImpulse(
+                        CGVector(dx: randomX - 1480, dy: randomY - 767),duration: 200)
+            self.enemyBullet.run(enemyBulletAction)
+        //}
     }
     
     func movePlayer(){
@@ -203,10 +234,10 @@ class GameScene: SKScene {
                         // Remove the Sprite first from Parent then, from Array. else it does not completely removes the sprite and creates memory problems.
                         sprite.removeFromParent()
                         self.bulletsArray.removeFirst()
-                        print("no.of bullets(after crossing screen): \(self.bulletsArray.count)")
+                        //print("no.of bullets(after crossing screen): \(self.bulletsArray.count)")
                     }
                     if sprite.intersects(self.enemy) {
-                        self.enemy.physicsBody = nil
+                        //self.enemy.physicsBody = nil
                         sprite.removeFromParent()
                         self.bulletsArray.removeFirst()
                         print("no. of bullets after hitting: \(self.bulletsArray.count)")
@@ -259,13 +290,11 @@ class GameScene: SKScene {
             destination = destination2
         }
         
-        let distance = sqrt(pow(destination.x - self.player.position.x, 2) +
-            pow(destination.y - self.player.position.y, 2))
-        
         let bulletVector = CGVector(dx: destination.x - self.player.position.x, dy: destination.y - self.player.position.y)
         // Shoot the bullet to destination
         self.playerBullet.physicsBody?.velocity = bulletVector
     }
+    
     
     func bulletHitsEnemy(){
         self.enumerateChildNodes(withName: "enemy") {
