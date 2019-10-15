@@ -54,8 +54,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         addChild(self.player)
         
         let circle = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 30, height: 50), cornerRadius: 30)
+        
         let followCircle = SKAction.follow(circle.cgPath, asOffset: true, orientToPath: false, duration: 5.0)
         let circleAnimation = followCircle.reversed()
+        
         
         self.enumerateChildNodes(withName: "enemy") {
             (node, stop) in
@@ -116,7 +118,6 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.moveBulletToTarget()
         }
         self.spawnEnemyBullet()
-        self.moveEnemyBullets()
         self.removeBullet()
         self.bulletHitsEnemy()
         
@@ -124,12 +125,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     func spawnPlayerBullet() {
         // 1. Make a bullet
         
-        if(self.bulletsArray.count <= 2){
+        if(self.bulletsArray.count <= 1){
             self.playerBullet = Bullet(imageNamed: "player_bullet")
-            self.playerBullet.physicsBody = SKPhysicsBody(texture: SKTexture(imageNamed: "player_bullet"), size: self.playerBullet.size)
-            self.playerBullet.physicsBody?.affectedByGravity = false
-            self.playerBullet.physicsBody?.categoryBitMask = 1
-            self.playerBullet.physicsBody?.collisionBitMask = 0
+//            self.playerBullet.physicsBody = SKPhysicsBody(texture: SKTexture(imageNamed: "player_bullet"), size: self.playerBullet.size)
+//            self.playerBullet.physicsBody?.affectedByGravity = false
+//            self.playerBullet.physicsBody?.categoryBitMask = 1
+//            self.playerBullet.physicsBody?.collisionBitMask = 0
             //self.playerBullet.physicsBody?.contactTestBitMask = 2
             self.playerBullet.size.width = self.player.size.width/2
             self.playerBullet.size.height = self.player.size.height/2
@@ -141,25 +142,26 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     }
     func spawnEnemyBullet(){
         
-        if (self.enemyBulletsArray.count <= 4){
-            self.enemyBullet = Bullet(imageNamed: "enemyBullet")
-            self.enemyBullet.position = CGPoint(x: 1480, y: 767)
-            self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
-            self.enemyBullet.physicsBody?.categoryBitMask = 3
-            self.enemyBullet.physicsBody?.collisionBitMask = 0
-            addChild(self.enemyBullet)
-            self.enemyBulletsArray.append(self.enemyBullet)
+        if (self.enemyBulletsArray.count <= 10){
+            // Shoot enemy Bullets in a cicular burst
+            for i in stride(from: 0.1, to: 2*CFloat.pi, by: 0.3){
+                self.enemyBullet = Bullet(imageNamed: "enemyBullet")
+                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
+                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
+                self.enemyBullet.physicsBody?.categoryBitMask = 3
+                self.enemyBullet.physicsBody?.collisionBitMask = 0
+                addChild(self.enemyBullet)
+                self.enemyBulletsArray.append(self.enemyBullet)
+                let x = 50*cos(i) + 1480
+                let y = 50*sin(i) + 767
+                print(x)
+                print(y)
+                let enemyBulletAction = SKAction.applyImpulse(
+                    CGVector(dx: CDouble(x - 1480), dy: CDouble(y - 767)),duration: 10)
+                self.enemyBullet.run(enemyBulletAction)
+                
+            }
         }
-    }
-    func moveEnemyBullets(){
-        let randomX = Int.random(in: 0...2250)
-        let randomY = Int.random(in: 0...1550)
-        
-        //for i in 0...3 {
-            let enemyBulletAction = SKAction.applyImpulse(
-                        CGVector(dx: randomX - 1480, dy: randomY - 767),duration: 200)
-            self.enemyBullet.run(enemyBulletAction)
-        //}
     }
     
     func movePlayer(){
@@ -290,9 +292,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             destination = destination2
         }
         
-        let bulletVector = CGVector(dx: destination.x - self.player.position.x, dy: destination.y - self.player.position.y)
-        // Shoot the bullet to destination
-        self.playerBullet.physicsBody?.velocity = bulletVector
+        let bulletAction = SKAction.move(to: destination, duration: 0.7)
+        self.playerBullet.run(bulletAction)
+        
+//        let bulletVector = CGVector(dx: destination.x - self.player.position.x, dy: destination.y - self.player.position.y)
+//        // Shoot the bullet to destination
+//        self.playerBullet.physicsBody?.velocity = bulletVector
     }
     
     
