@@ -34,6 +34,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var arrowButtonTouched = false
     var shootBullet = false
     var arrowButtonsRect:CGRect!
+    var burstType = 1
     
     override func didMove(to view: SKView) {
         // Set the background color of the app
@@ -107,6 +108,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         addChild(self.upRightArrow)
         
         self.arrowButtonsRect = CGRect(x: 0, y: 0, width: self.rightArrow.position.x + self.rightArrow.size.width/2, height: self.upArrow.position.y + self.upArrow.size.height/2)
+        
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -117,10 +119,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.spawnPlayerBullet()
             self.moveBulletToTarget()
         }
-        self.spawnEnemyBullet()
         self.removeBullet()
         self.bulletHitsEnemy()
-        
+        self.spawnEnemyBullet()
+        self.removeEnemyBullets()
     }
     func spawnPlayerBullet() {
         // 1. Make a bullet
@@ -142,29 +144,35 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     }
     func spawnEnemyBullet(){
         
-        if (self.enemyBulletsArray.count <= 10){
+        if (self.enemyBulletsArray.count <= 0){
+            if (self.burstType == 1){
             // Shoot enemy Bullets in a cicular burst
-//            for i in stride(from: 0.1, to: 2*CFloat.pi, by: 0.3){
-//                self.enemyBullet = Bullet(imageNamed: "enemyBullet")
-//                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
-//                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
-//                self.enemyBullet.physicsBody?.categoryBitMask = 3
-//                self.enemyBullet.physicsBody?.collisionBitMask = 0
-//                addChild(self.enemyBullet)
-//                self.enemyBulletsArray.append(self.enemyBullet)
-//                let x = 50*cos(i) + 1480
-//                let y = 50*sin(i) + 767
-//                print(x)
-//                print(y)
-//                let enemyBulletAction = SKAction.applyImpulse(
-//                    CGVector(dx: CDouble(x - 1480), dy: CDouble(y - 767)),duration: 10)
-//                self.enemyBullet.run(enemyBulletAction)
-//
-//            }
-            if(self.enemyBulletsArray.count <= 100){
+            for i in stride(from: 0.1, to: 2*CFloat.pi, by: 0.3){
+                self.enemyBullet = Bullet(imageNamed: "enemyBullet")
+                self.enemyBullet.name = "enemyBullet"
+                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
+                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
+                self.enemyBullet.physicsBody?.categoryBitMask = 3
+                self.enemyBullet.physicsBody?.collisionBitMask = 0
+                addChild(self.enemyBullet)
+                self.enemyBulletsArray.append(self.enemyBullet)
+                let x = 50*cos(i) + 1480
+                let y = 50*sin(i) + 767
+                let enemyBulletAction = SKAction.applyImpulse(
+                    CGVector(dx: CDouble(x - 1480), dy: CDouble(y - 767)),duration: 10)
+                self.enemyBullet.run(enemyBulletAction)
+                
+                }
+
+            }
+        //}
+        //if (self.enemyBulletsArray.count <= 9){
+             if(self.burstType == 2){
                 //for i in stride(from: 0, to: 1, by: 1){
                 //move up right
+            
             self.enemyBullet = Bullet(imageNamed: "enemyBullet")
+                self.enemyBullet.name = "enemyBullet"
             self.enemyBullet.position = CGPoint(x: 1480, y: 767)
             self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
             self.enemyBullet.physicsBody?.categoryBitMask = 3
@@ -172,85 +180,81 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             addChild(self.enemyBullet)
             self.enemyBulletsArray.append(self.enemyBullet)
                 
-                
-    
+
+
+
                 let circle = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 2000, height: 2000), cornerRadius: 1000)
-                let followCircle = SKAction.follow(circle.cgPath, asOffset: true, orientToPath: false, duration: 5.0)
+                let followCircle = SKAction.follow(circle.cgPath, asOffset: true, orientToPath: true, duration: 20.0)
+
                 let circleAnimation = followCircle
-                self.enemyBullet.run(SKAction.repeatForever(circleAnimation.reversed()))
-                
-                //}
+                self.enemyBullet.run((circleAnimation.reversed()))
+                print("enemy bullet position x: \(self.enemyBullet.position.x)")
+                print("enemy bullet position y: \(self.enemyBullet.position.y)")
+
                 //move down left
                 self.enemyBullet = Bullet(imageNamed: "enemyBullet")
+                self.enemyBullet.name = "enemyBullet"
                 self.enemyBullet.position = CGPoint(x: 1480, y: 767)
                 self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
                 self.enemyBullet.physicsBody?.categoryBitMask = 3
                 self.enemyBullet.physicsBody?.collisionBitMask = 0
                 addChild(self.enemyBullet)
-                //self.enemyBulletsArray.append(self.enemyBullet)
-                
+                self.enemyBulletsArray.append(self.enemyBullet)
+
                 let circle2 = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: -2000, height: -2000), cornerRadius: 1000)
-                
-                let followCircle2 = SKAction.follow(circle2.cgPath, asOffset: true, orientToPath: false, duration: 5.0)
+
+                let followCircle2 = SKAction.follow(circle2.cgPath, asOffset: true, orientToPath: true, duration: 20.0)
                 let circleAnimation2 = followCircle2.reversed()
-                
-                self.enemyBullet.run(SKAction.repeatForever(circleAnimation2.reversed()))
-                
-                
-                
+
+                self.enemyBullet.run((circleAnimation2.reversed()))
+
+
                 self.enemyBullet = Bullet(imageNamed: "enemyBullet")
+                self.enemyBullet.name = "enemyBullet"
                 self.enemyBullet.position = CGPoint(x: 1480, y: 767)
                 self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
                 self.enemyBullet.physicsBody?.categoryBitMask = 3
                 self.enemyBullet.physicsBody?.collisionBitMask = 0
                 addChild(self.enemyBullet)
                 self.enemyBulletsArray.append(self.enemyBullet)
+
+            self.enemyBullet.run((circleAnimation2))
                 
-                self.enemyBullet.run(SKAction.repeatForever(circleAnimation))
-                
-                
-                
-                self.enemyBullet = Bullet(imageNamed: "enemyBullet")
-                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
-                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
-                self.enemyBullet.physicsBody?.categoryBitMask = 3
-                self.enemyBullet.physicsBody?.collisionBitMask = 0
-                addChild(self.enemyBullet)
-                self.enemyBulletsArray.append(self.enemyBullet)
-                
-            self.enemyBullet.run(SKAction.repeatForever(circleAnimation2))
+               
             }
             
-            
-//            for i in stride(from: 0.1, to: 2*CFloat.pi, by: 0.3){
-//                self.enemyBullet = Bullet(imageNamed: "enemyBullet")
-//                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
-//                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
-//                self.enemyBullet.physicsBody?.categoryBitMask = 3
-//                self.enemyBullet.physicsBody?.collisionBitMask = 0
-//                addChild(self.enemyBullet)
-//                self.enemyBulletsArray.append(self.enemyBullet)
-//                let x = 50*cos(i) + 1480
-//                let y = 50*sin(i) + 767
-//                print(x)
-//                print(y)
-//                let circle = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 100, height: 100), cornerRadius: 100)
-//
-//                let followCircle = SKAction.follow(circle.cgPath, asOffset: true, orientToPath: false, duration: 5.0)
-//                let circleAnimation = followCircle.reversed()
-//
-//                self.enemyBullet.run(SKAction.repeatForever(circleAnimation.reversed()))
-//                let enemyBulletAction = SKAction.applyImpulse(
-//                    CGVector(dx: CDouble(x - 1480), dy: CDouble(y - 767)),duration: 10)
-//                self.enemyBullet.run(enemyBulletAction)
-//
-//            }
             
         }
     }
     
     func removeEnemyBullets(){
         //Remove enemy bullets after they hit the borders
+        self.enemyBullet.name = "enemyBullet"
+        self.enumerateChildNodes(withName: "enemyBullet") {
+            node, stop in
+            if(self.enemyBulletsArray.count != 0){
+                if (node is SKSpriteNode) {
+                    let sprite = node as! SKSpriteNode
+                    //for i in stride(from: 0.1, to: 2*CFloat.pi, by: 0.3){
+        if (sprite.position.x < 10 || sprite.position.x > self.size.width - 10 || sprite.position.y < 10 || sprite.position.y > self.size.height - 10) {
+            sprite.removeFromParent()
+            self.enemyBulletsArray.removeFirst()
+            print("no.of enemy bullets: \(self.enemyBulletsArray.count)")
+                        //}
+            if(self.enemyBulletsArray.count == 0){
+                if (self.burstType == 1){
+                    self.burstType = 2
+                }
+                    
+                else if (self.burstType == 2){
+                    self.burstType = 1
+                }
+                
+            }
+                    }
+                }
+            }
+        }
     }
     
     func movePlayer(){
@@ -511,6 +515,15 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             if (self.shootBullet == true){
                 self.spawnBulletsCallBack()
+            }
+        }
+    }
+    @objc func spawnEnemyBulletsCallBack(){
+        self.spawnEnemyBullet()
+        //self.moveBulletToTarget()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            if (self.enemyBulletsArray.count == 0){
+                self.spawnEnemyBulletsCallBack()
             }
         }
     }
