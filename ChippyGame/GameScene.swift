@@ -199,11 +199,57 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             if(self.burstType == 3){
                 //for i in stride(from: 0, to: 1, by: 1){
                 //move up right
+                var duration = 20
+                for i in 0...3{
+                self.enemyBullet = Bullet(imageNamed: "enemyBullet")
+                self.enemyBullet.name = "enemyBullet"
+                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
+                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
+                self.enemyBullet.physicsBody?.categoryBitMask = 3
+                self.enemyBullet.physicsBody?.collisionBitMask = 0
+                addChild(self.enemyBullet)
+                self.enemyBulletsArray.append(self.enemyBullet)
                 
                 
                 
-                for i in 0...2{
+                
+                let circle = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 2000, height: 2000), cornerRadius: 1000)
+                    let followCircle = SKAction.follow(circle.cgPath, asOffset: true, orientToPath: true, duration: TimeInterval(duration))
+                
+                let circleAnimation = followCircle
+                self.enemyBullet.run((circleAnimation.reversed()))
+                print("enemy bullet position x: \(self.enemyBullet.position.x)")
+                print("enemy bullet position y: \(self.enemyBullet.position.y)")
                     
+                
+                //move down left
+                self.enemyBullet = Bullet(imageNamed: "enemyBullet3")
+                self.enemyBullet.name = "enemyBullet"
+                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
+                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
+                self.enemyBullet.physicsBody?.categoryBitMask = 3
+                self.enemyBullet.physicsBody?.collisionBitMask = 0
+                addChild(self.enemyBullet)
+                self.enemyBulletsArray.append(self.enemyBullet)
+                
+                let circle2 = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: -2000, height: -2000), cornerRadius: 1000)
+                
+                let followCircle2 = SKAction.follow(circle2.cgPath, asOffset: true, orientToPath: true, duration:  TimeInterval(duration))
+                let circleAnimation2 = followCircle2.reversed()
+                
+                self.enemyBullet.run((circleAnimation2.reversed()))
+                
+                
+                self.enemyBullet = Bullet(imageNamed: "enemyBullet3")
+                self.enemyBullet.name = "enemyBullet"
+                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
+                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
+                self.enemyBullet.physicsBody?.categoryBitMask = 3
+                self.enemyBullet.physicsBody?.collisionBitMask = 0
+                addChild(self.enemyBullet)
+                self.enemyBulletsArray.append(self.enemyBullet)
+                
+                self.enemyBullet.run((circleAnimation2))
                     
                     self.enemyBullet = Bullet(imageNamed: "enemyBullet")
                     self.enemyBullet.name = "enemyBullet"
@@ -214,87 +260,18 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                     addChild(self.enemyBullet)
                     self.enemyBulletsArray.append(self.enemyBullet)
                     
-                    //self.enemyBullet.run((circleAnimation.reversed()))
-                    print("enemy bullet position x: \(self.enemyBullet.position.x)")
-                    print("enemy bullet position y: \(self.enemyBullet.position.y)")
-                    var circlePathSize = 2000
-                    //var circlePathHeight = 2000
-                    var circle = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: circlePathSize, height: circlePathSize), cornerRadius: 1000)
-                    var followCircle = SKAction.follow(circle.cgPath, asOffset: true, orientToPath: true, duration: 20.0)
-                    if(i == 0){
-                        let circleAnimation = followCircle
-                        self.enemyBullet.run((circleAnimation.reversed()))
-                        
-                    }
-                    if(i==1){
-                        circlePathSize = -2000
-                        let circleAnimation = followCircle.reversed()
-                        self.enemyBullet.run((circleAnimation.reversed()))
-                        self.enemyBullet.run((circleAnimation.reversed()))
-                        self.enemyBullet.run((circleAnimation.reversed()))
-                        self.enemyBullet.run((circleAnimation.reversed()))
-                    }
-                    if(i==2){
-                        circlePathSize = -2000
-                        let circleAnimation = followCircle.reversed()
-                        self.enemyBullet.run(circleAnimation)
-                        self.enemyBullet.run(circleAnimation)
-                        self.enemyBullet.run(circleAnimation)
-                        self.enemyBullet.run(circleAnimation)
-                        print("ruinning i==2")
-                    }
+                    let circle3 = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 2000, height: 2000), cornerRadius: 1000)
+                    
+                    let followCircle3 = SKAction.follow(circle3.cgPath, asOffset: true, orientToPath: true, duration:  TimeInterval(duration))
+                    let circleAnimation3 = followCircle3.reversed()
+                    
+                    self.enemyBullet.run((circleAnimation3.reversed()))
+                    
+                
+                    duration = duration + 5
                 }
-//                self.enemyBullet = Bullet(imageNamed: "enemyBullet")
-//                self.enemyBullet.name = "enemyBullet"
-//                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
-//                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
-//                self.enemyBullet.physicsBody?.categoryBitMask = 3
-//                self.enemyBullet.physicsBody?.collisionBitMask = 0
-//                addChild(self.enemyBullet)
-//                self.enemyBulletsArray.append(self.enemyBullet)
-//
-//
-//
-//
-//                let circle = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 2000, height: 2000), cornerRadius: 1000)
-//                let followCircle = SKAction.follow(circle.cgPath, asOffset: true, orientToPath: true, duration: 20.0)
-//
-//                let circleAnimation = followCircle
-//                self.enemyBullet.run((circleAnimation.reversed()))
-//                print("enemy bullet position x: \(self.enemyBullet.position.x)")
-//                print("enemy bullet position y: \(self.enemyBullet.position.y)")
-                
-                //move down left
-//                self.enemyBullet = Bullet(imageNamed: "enemyBullet3")
-//                self.enemyBullet.name = "enemyBullet"
-//                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
-//                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
-//                self.enemyBullet.physicsBody?.categoryBitMask = 3
-//                self.enemyBullet.physicsBody?.collisionBitMask = 0
-//                addChild(self.enemyBullet)
-//                self.enemyBulletsArray.append(self.enemyBullet)
-//
-//                let circle2 = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: -2000, height: -2000), cornerRadius: 1000)
-//
-//                let followCircle2 = SKAction.follow(circle2.cgPath, asOffset: true, orientToPath: true, duration: 20.0)
-//                let circleAnimation2 = followCircle2.reversed()
-//
-//                self.enemyBullet.run((circleAnimation2.reversed()))
-//
-//
-//                self.enemyBullet = Bullet(imageNamed: "enemyBullet3")
-//                self.enemyBullet.name = "enemyBullet"
-//                self.enemyBullet.position = CGPoint(x: 1480, y: 767)
-//                self.enemyBullet.physicsBody = SKPhysicsBody(circleOfRadius: self.enemyBullet.size.width/2)
-//                self.enemyBullet.physicsBody?.categoryBitMask = 3
-//                self.enemyBullet.physicsBody?.collisionBitMask = 0
-//                addChild(self.enemyBullet)
-//                self.enemyBulletsArray.append(self.enemyBullet)
-//
-//                self.enemyBullet.run((circleAnimation2))
-//
-                
             }
+                
             
             
         }
