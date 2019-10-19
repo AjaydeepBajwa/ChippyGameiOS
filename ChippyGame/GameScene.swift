@@ -480,61 +480,65 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     
     func movePlayer(){
         
-        if ((self.arrowTouched == "up")&&(self.player.position.y < self.size.height)){
+        if (self.arrowTouched == "up"){
+            self.player.zRotation = .pi / 2
+            if(self.player.position.y < self.size.height - self.player.size.height){
             let playerMove = SKAction.moveBy(x: 0, y: 30, duration: 0.01)
             self.player.run(playerMove)
-            self.player.zRotation = .pi / 2
+            }
         }
-        else if (self.arrowTouched == "down")&&(self.player.position.y > 0){
+        else if (self.arrowTouched == "down"){
+            self.player.zRotation = .pi / -2
+            if(self.player.position.y > 0 + self.player.size.height){
             let playerMove = SKAction.moveBy(x: 0, y: -30, duration: 0.01)
             self.player.run(playerMove)
-            self.player.zRotation = .pi / -2
+            }
         }
-        else if (self.arrowTouched == "left")&&(self.player.position.x > 0 ){
+        else if (self.arrowTouched == "left"){
+            self.player.zRotation = .pi
+            if(self.player.position.x > 0 + self.player.size.width){
             let playerMove = SKAction.moveBy(x: -30, y: 0, duration: 0.01)
             self.player.run(playerMove)
-            self.player.zRotation = .pi
-            //self.player.position.x = self.player.position.x - 10
+            }
         }
-        else if (self.arrowTouched == "right")&&(self.player.position.x < self.size.width){
+        else if (self.arrowTouched == "right"){
+            self.player.zRotation = 0
+            if(self.player.position.x < self.size.width - self.player.size.width){
             let playerMove = SKAction.moveBy(x: 30, y: 0, duration: 0.01)
             self.player.run(playerMove)
-            self.player.zRotation = 0
-            //self.player.position.x = self.player.position.x + 10
+            }
         }
-        else if (self.arrowTouched == "upRight")&&(self.player.position.x < self.size.width){
+        else if (self.arrowTouched == "upRight"){
+            self.player.zRotation = .pi / 4
+            if(self.player.position.x < self.size.width - self.player.size.width)&&(self.player.position.y < self.size.height - self.player.size.height){
             let playerMove = SKAction.moveBy(x: 30, y: 30, duration: 0.01)
             self.player.run(playerMove)
-            self.player.zRotation = .pi / 4
-            //self.player.position.x = self.player.position.x + 10
+            }
         }
-        else if (self.arrowTouched == "downRight")&&(self.player.position.x < self.size.width)&&(self.player.position.y < self.size.height){
+        else if (self.arrowTouched == "downRight"){
+              self.player.zRotation = .pi / -4
+            if(self.player.position.x < self.size.width - self.player.size.width)&&(self.player.position.y > self.player.size.height){
             let playerMove = SKAction.moveBy(x: 30, y: -30, duration: 0.01)
             self.player.run(playerMove)
-            self.player.zRotation = .pi / -4
-            //self.player.position.x = self.player.position.x + 10
+            }
         }
             
-        else if (self.arrowTouched == "downLeft")&&(self.player.position.x > 0)&&(self.player.position.y > 0){
+        else if (self.arrowTouched == "downLeft"){
+             self.player.zRotation = .pi / -1.5
+            if(self.player.position.x > 0 + self.player.size.width)&&(self.player.position.y > 0 + self.player.size.height){
             let playerMove = SKAction.moveBy(x: -30, y: -30, duration: 0.01)
             self.player.run(playerMove)
-            self.player.zRotation = .pi / -1.5
-            //self.player.position.x = self.player.position.x + 10
+            }
         }
             
-        else if (self.arrowTouched == "upLeft")&&(self.player.position.x > 0)&&(self.player.position.y < self.size.height){
+        else if (self.arrowTouched == "upLeft"){
+            self.player.zRotation = .pi / 1.5
+            if(self.player.position.x > 0 + self.player.size.width)&&(self.player.position.y < self.size.height - self.player.size.height){
             let playerMove = SKAction.moveBy(x: -30, y: 30, duration: 0.01)
             self.player.run(playerMove)
-            self.player.zRotation = .pi / 1.5
-            //self.player.position.x = self.player.position.x + 10
+            }
         }
         
-        // let indefiniteBulletMove = SKAction.repeatForever(moveBullet)
-        
-        //        else if (self.arrowTouched == "") {
-        //            self.player.position = self.player.position
-        //        }
-        //self.player.texture = SKTexture(imageNamed: "up")
         
     }
     func removeBullet(){
