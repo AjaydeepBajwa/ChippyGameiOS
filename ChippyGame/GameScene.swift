@@ -310,23 +310,30 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         if (sprite.position.x < 10 || sprite.position.x > self.size.width - 10 || sprite.position.y < 10 || sprite.position.y > self.size.height - 10) {
             sprite.removeFromParent()
             self.enemyBulletsArray.removeFirst()
-            print("no.of enemy bullets: \(self.enemyBulletsArray.count)")
+           print("no.of enemy bullets: \(self.enemyBulletsArray.count)")
                         //}
-            if(self.enemyBulletsArray.count == 0){
-                
-                if (self.burstType == 1){
-                    self.burstType = 2
-                }
-
-                else if (self.burstType == 2){
-                    self.burstType = 3
-                }
-                else if (self.burstType == 3){
-                    self.burstType = 1
-                }
-            
-            }
                     }
+                    if(sprite.intersects(self.player)){
+                        sprite.removeFromParent()
+                        self.enemyBulletsArray.removeFirst()
+                        self.playerHealthNode.xScale = self.playerHealthNode.xScale - (10*4.6)/100
+                         print("no.of enemy bullets: \(self.enemyBulletsArray.count)")
+                    }
+                    if(self.enemyBulletsArray.count == 0){
+                        
+                        if (self.burstType == 1){
+                            self.burstType = 2
+                        }
+                            
+                        else if (self.burstType == 2){
+                            self.burstType = 3
+                        }
+                        else if (self.burstType == 3){
+                            self.burstType = 1
+                        }
+                        
+                    }
+
                 }
             }
         }
@@ -535,6 +542,19 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             }
         }
     }
+//    func bulletHitsPlayer(){
+//        self.enumerateChildNodes(withName: "enemybullet") {
+//            (node, stop) in
+//            let bulletSprite = node as? SKSpriteNode
+//            if bulletSprite!.intersects(self.player){
+//                self.enemy.removeFromParent()
+//                self.removeBullet()
+//                print("enemy removed")
+//                self.enemyPartsCount = self.enemyPartsCount - 1
+//                self.enemyHealthNode.xScale = self.enemyHealthNode.xScale - CGFloat((self.enemyPartPercentage * 4.6)/100)
+//            }
+//        }
+//    }
     
     func checkArrowTouched(){
         
