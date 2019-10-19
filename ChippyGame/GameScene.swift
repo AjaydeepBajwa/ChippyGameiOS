@@ -403,7 +403,13 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 }
                 if (healthUpSprite.intersects(self.player)){
                     healthUpSprite.removeFromParent()
+                    
+                    if (self.playerHealthNode.xScale < (70*4.6)/100){
                     self.playerHealthNode.xScale = self.playerHealthNode.xScale + (30*4.6)/100
+                    }
+                    else {
+                       self.playerHealthNode.xScale = 4.6
+                    }
                 }
             }
             
