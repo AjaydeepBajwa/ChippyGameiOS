@@ -169,7 +169,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         if (self.healthMilliCount % 240 == 0){
             self.spawnHealthUp()
         }
-        if (self.shieldMilliCount % 200 == 0){
+        if (self.shieldMilliCount % 100 == 0){
             self.spawnObstacle()
         }
         self.removePowerUp()
@@ -409,14 +409,14 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         if(children.contains(where: { $0.name?.contains("obstacle") ?? false }) == false){
             self.obstacle = SKSpriteNode(imageNamed: "obstacle")
             self.obstacle.name = "obstacle"
-            self.obstacle.position.x = CGFloat.random(in: 200...self.size.width)
+            self.obstacle.position.x = CGFloat.random(in: self.size.width/2...self.size.width)
             self.obstacle.position.y = 50
             self.obstacle.physicsBody = SKPhysicsBody(circleOfRadius: self.obstacle.size.width/2)
             self.obstacle.physicsBody?.categoryBitMask = 32
             self.obstacle.physicsBody?.collisionBitMask = 0
             addChild(self.obstacle)
             
-            let obstacleMove = SKAction.applyImpulse(CGVector(dx: CGFloat.random(in: -(self.size.width*0.3)...self.size.width), dy: CGFloat.random(in: (self.size.height/3)...self.size.height)), duration: 50)
+            let obstacleMove = SKAction.applyImpulse(CGVector(dx: CGFloat.random(in: -(self.size.width*0.4)...self.size.width), dy: CGFloat.random(in: (self.size.height/3)...self.size.height)), duration: 50)
             self.obstacle.run(obstacleMove)
             
             
@@ -477,6 +477,13 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 // Check if the node is not in the scene
                 if (obstacleSprite.position.x < 40 || obstacleSprite.position.x > self.size.width - 40 || obstacleSprite.position.y < 40 || obstacleSprite.position.y > self.size.height - 40) {
                     obstacleSprite.removeFromParent()
+                }
+                if (obstacleSprite.intersects(self.player)){
+                   if (self.playerHealthNode.xScale >= 0){
+                        obstacleSprite.removeFromParent()
+                    //decrease player health by 20% if obstacle hits player
+                        self.playerHealthNode.xScale = self.playerHealthNode.xScale - (20*5)/100
+                    }
                 }
             }
             
