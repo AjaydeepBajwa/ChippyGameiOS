@@ -12,7 +12,11 @@ import GameplayKit
 class GameScene: SKScene,SKPhysicsContactDelegate {
     
     var player:Player = Player(imageNamed: "player")
+    var playerHealthNode:SKShapeNode!
+    var enemyHealthNode:SKShapeNode!
     var enemy:SKSpriteNode!
+    var enemyPartsCount = 0
+    var enemyPartPercentage:Double = 0
     //var playerBullet: SKSpriteNode!
     var playerBullet:Bullet = Bullet(imageNamed: "player_bullet")
     var enemyBullet:Bullet = Bullet(imageNamed: "enemyBullet")
@@ -59,6 +63,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         self.player.position = CGPoint(x: self.size.width*0.2, y: self.size.height / 2)
         addChild(self.player)
         
+        self.playerHealthNode = self.scene?.childNode(withName: "playerHealth") as! SKShapeNode
+        
         let circle = UIBezierPath(roundedRect: CGRect(x: 0, y: 0, width: 30, height: 50), cornerRadius: 30)
         
         let followCircle = SKAction.follow(circle.cgPath, asOffset: true, orientToPath: false, duration: 5.0)
@@ -69,7 +75,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             (node, stop) in
             self.enemy = node as? SKSpriteNode
             self.enemy.run(SKAction.repeatForever(circleAnimation.reversed()))
+            self.enemyPartsCount = self.enemyPartsCount + 1
         }
+        self.enemyPartPercentage = Double(100/self.enemyPartsCount)
+        print("Total Enemy Parts: \(self.enemyPartsCount)")
+        
+        self.enemyHealthNode = self.scene?.childNode(withName: "enemyHealth") as! SKShapeNode
         
         self.leftArrow = SKSpriteNode(imageNamed: "left")
         self.leftArrow.size = CGSize(width: self.size.width/25, height: self.size.height/20)
@@ -519,6 +530,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 self.enemy.removeFromParent()
                 self.removeBullet()
                 print("enemy removed")
+                self.enemyPartsCount = self.enemyPartsCount - 1
+                self.enemyHealthNode.xScale = self.enemyHealthNode.xScale - CGFloat((self.enemyPartPercentage * 4.6)/100)
             }
         }
     }
