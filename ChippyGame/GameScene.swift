@@ -158,6 +158,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         if (self.shieldTimer) == 0 {
             self.removePlayerShield()
         }
+        self.endGame()
         print("Shield Timer: \(self.shieldTimer)")
     }
     func spawnPlayerBullet() {
@@ -322,11 +323,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                         print("no.of enemy bullets: \(self.enemyBulletsArray.count)")
                         //}
                     }
+                    //remove enemy bullets and decrease player health after they hit player
                     if(sprite.intersects(self.player)){
-                        if (self.shieldTimer < 1){
+                        if (self.shieldTimer < 1)&&(self.playerHealthNode.xScale >= 0){
                         sprite.removeFromParent()
                         self.enemyBulletsArray.removeFirst()
-                        self.playerHealthNode.xScale = self.playerHealthNode.xScale - (10*4.6)/100
+                        self.playerHealthNode.xScale = self.playerHealthNode.xScale - (10*5)/100
                         print("no.of enemy bullets: \(self.enemyBulletsArray.count)")
                         }
                     }
@@ -403,12 +405,13 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 }
                 if (healthUpSprite.intersects(self.player)){
                     healthUpSprite.removeFromParent()
-                    
-                    if (self.playerHealthNode.xScale < (70*4.6)/100){
-                    self.playerHealthNode.xScale = self.playerHealthNode.xScale + (30*4.6)/100
+                    if self.playerHealthNode.xScale > 0{
+                    if (self.playerHealthNode.xScale < (70*5)/100){
+                    self.playerHealthNode.xScale = self.playerHealthNode.xScale + (30*5)/100
                     }
                     else {
-                       self.playerHealthNode.xScale = 4.6
+                       self.playerHealthNode.xScale = 5
+                    }
                     }
                 }
             }
@@ -428,29 +431,40 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                         self.shieldTimer = 120
                         shieldSprite.removeFromParent()
                         self.player.texture = SKTexture(imageNamed: "bubblePlayer")
-                        
-                        //                        self.shieldBubble = SKSpriteNode(imageNamed: "bubble")
-                        //                        self.shieldBubble.position = self.player.position
-                        //                        self.addChild(self.shieldBubble)
-                        //                        let bubbleMove = SKAction.move(to: self.player.position, duration: 0.1)
-                        //                        self.shieldBubble.run(SKAction.repeatForever(bubbleMove))
+
                     }
                 }
         }
-//        self.enumerateChildNodes(withName: "healthUp") {
-//            node, stop in
-//            if (node is SKSpriteNode) {
-//                let healthUpSprite = node as! SKSpriteNode
-//                // Check if the node is not in the scene
-//                if (healthUpSprite.position.x < 40 || healthUpSprite.position.x > self.size.width - 40 || healthUpSprite.position.y < 40 || healthUpSprite.position.y > self.size.height - 40) {
-//                    healthUpSprite.removeFromParent()
-//                }
-//            }
-//        }
+
     }
     
     func removePlayerShield(){
         self.player.texture = SKTexture(imageNamed: "player")
+    }
+    
+    func endGame(){
+        if (self.enemyHealthNode.xScale <= 0.5){
+            let congratsMessage = SKLabelNode(text: "Congratulations, You Won!")
+            congratsMessage.fontSize = 50
+            congratsMessage.fontName = "Avenir"
+            congratsMessage.fontColor = UIColor.red
+            congratsMessage.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
+            addChild(congratsMessage)
+            
+            scene!.view?.isPaused = true
+            self.enemyHealthNode.removeFromParent()
+        }
+        if (self.playerHealthNode.xScale <= 0.5){
+            let lostMessage = SKLabelNode(text: "You lose!")
+            lostMessage.fontSize = 50
+            lostMessage.fontName = "Avenir"
+            lostMessage.fontColor = UIColor.red
+            lostMessage.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
+            addChild(lostMessage)
+            
+            scene!.view?.isPaused = true
+            self.playerHealthNode.removeFromParent()
+        }
     }
     
     func movePlayer(){
@@ -599,7 +613,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 self.removeBullet()
                 print("enemy removed")
                 self.enemyPartsCount = self.enemyPartsCount - 1
-                self.enemyHealthNode.xScale = self.enemyHealthNode.xScale - CGFloat((self.enemyPartPercentage * 4.6)/100)
+                self.enemyHealthNode.xScale = self.enemyHealthNode.xScale - CGFloat((self.enemyPartPercentage * 5)/100)
             }
         }
     }
@@ -612,7 +626,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     //                self.removeBullet()
     //                print("enemy removed")
     //                self.enemyPartsCount = self.enemyPartsCount - 1
-    //                self.enemyHealthNode.xScale = self.enemyHealthNode.xScale - CGFloat((self.enemyPartPercentage * 4.6)/100)
+    //                self.enemyHealthNode.xScale = self.enemyHealthNode.xScale - CGFloat((self.enemyPartPercentage * 5)/100)
     //            }
     //        }
     //    }
