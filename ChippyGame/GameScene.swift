@@ -323,10 +323,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                         //}
                     }
                     if(sprite.intersects(self.player)){
+                        if (self.shieldTimer < 1){
                         sprite.removeFromParent()
                         self.enemyBulletsArray.removeFirst()
                         self.playerHealthNode.xScale = self.playerHealthNode.xScale - (10*4.6)/100
                         print("no.of enemy bullets: \(self.enemyBulletsArray.count)")
+                        }
                     }
                     if(self.enemyBulletsArray.count == 0){
                         
