@@ -31,6 +31,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var downLeftArrow:SKSpriteNode!
     var upRightArrow:SKSpriteNode!
     var downRightArrow:SKSpriteNode!
+    var reloadBtn:SKSpriteNode!
     var healthUp:SKSpriteNode!
     var shield:SKSpriteNode!
     var shieldBubble:SKSpriteNode!
@@ -123,6 +124,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         self.upRightArrow.size = CGSize(width: self.size.height/20, height: self.size.width/30)
         self.upRightArrow.position = CGPoint(x: self.downRightArrow.position.x, y: self.upLeftArrow.position.y)
         addChild(self.upRightArrow)
+        
+        self.reloadBtn = self.scene?.childNode(withName: "reload") as! SKSpriteNode
         
         self.arrowButtonsRect = CGRect(x: 0, y: 0, width: self.rightArrow.position.x + self.rightArrow.size.width/2, height: self.upArrow.position.y + self.upArrow.size.height/2)
         
@@ -445,7 +448,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     func endGame(){
         if (self.enemyHealthNode.xScale <= 0.5){
             let congratsMessage = SKLabelNode(text: "Congratulations, You Won!")
-            congratsMessage.fontSize = 50
+            congratsMessage.fontSize = 150
             congratsMessage.fontName = "Avenir"
             congratsMessage.fontColor = UIColor.red
             congratsMessage.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
@@ -453,10 +456,14 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             
             scene!.view?.isPaused = true
             self.enemyHealthNode.removeFromParent()
+            
+            self.reloadBtn.texture = SKTexture(imageNamed: "playAgain")
+            self.reloadBtn.size = CGSize(width: (self.reloadBtn.texture?.size().width)!, height: (self.reloadBtn.texture?.size().height)!)
+            self.reloadBtn.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.3)
         }
         if (self.playerHealthNode.xScale <= 0.5){
             let lostMessage = SKLabelNode(text: "You lose!")
-            lostMessage.fontSize = 50
+            lostMessage.fontSize = 150
             lostMessage.fontName = "Avenir"
             lostMessage.fontColor = UIColor.red
             lostMessage.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
@@ -464,6 +471,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             
             scene!.view?.isPaused = true
             self.playerHealthNode.removeFromParent()
+            
+            self.reloadBtn.texture = SKTexture(imageNamed: "playAgain")
+            self.reloadBtn.size = CGSize(width: (self.reloadBtn.texture?.size().width)!, height: (self.reloadBtn.texture?.size().height)!)
+            self.reloadBtn.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.3)
         }
     }
     
@@ -685,6 +696,19 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         else {
             self.shootBullet = true
             //self.spawnBulletsCallBack()
+        }
+        if (self.reloadBtn.contains(touch.location(in: self))){
+            //Remove the Scene Children
+            self.removeAllChildren()
+            self.removeAllActions()
+            
+            print("Restarted")
+            //Present the scene again
+            let scene = SKScene(fileNamed: "GameScene")
+            scene!.scaleMode = .aspectFill
+            view!.presentScene(scene)
+            
+            
         }
         
         
