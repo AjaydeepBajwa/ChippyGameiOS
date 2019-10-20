@@ -48,6 +48,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var healthMilliCount = 0
     var shieldMilliCount = 60
     var shieldTimer = 1
+    var timeElapsedSeconds = 00
+    var timeElapsedMinutes = 00
+    var timeElapsedHours = 00
+    var timeElapsedSprite:SKLabelNode!
     
     override func didMove(to view: SKView) {
         // Set the background color of the app
@@ -182,6 +186,23 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         }
         self.endGame()
         print("Shield Timer: \(self.shieldTimer)")
+        
+        if (self.healthMilliCount % 10 == 0){
+            self.timeElapsedSeconds = self.timeElapsedSeconds + 1
+            self.timeElapsedSprite = self.scene?.childNode(withName: "timeElapsed") as! SKLabelNode
+            self.timeElapsedSprite.text =  String(format: "%02d", self.timeElapsedSeconds)
+            self.timeElapsedSprite.text = "Time Elapsed: \(String(format: "%02d", self.timeElapsedHours)):\(String(format: "%02d", self.timeElapsedMinutes)):\(String(format: "%02d", self.timeElapsedSeconds))"
+            if (self.timeElapsedSeconds % 60 == 0){
+                self.timeElapsedMinutes = self.timeElapsedMinutes + 1
+                self.timeElapsedSeconds = 0
+                if (self.timeElapsedMinutes % 60 == 0){
+                    self.timeElapsedHours = self.timeElapsedHours + 1
+                    self.timeElapsedMinutes = 0
+                }
+            }
+            
+            
+        }
     }
     
     
@@ -528,6 +549,9 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.reloadBtn.texture = SKTexture(imageNamed: "playAgain")
             self.reloadBtn.size = CGSize(width: (self.reloadBtn.texture?.size().width)!, height: (self.reloadBtn.texture?.size().height)!)
             self.reloadBtn.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.3)
+            
+            self.timeElapsedSprite.position = CGPoint(x: self.size.width/2, y: self.size.height*0.3)
+            self.timeElapsedSprite.fontColor = UIColor.green
         }
         if (self.playerHealthNode.xScale <= 0.5){
             let lostMessage = SKLabelNode(text: "You lose!")
@@ -543,6 +567,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.reloadBtn.texture = SKTexture(imageNamed: "playAgain")
             self.reloadBtn.size = CGSize(width: (self.reloadBtn.texture?.size().width)!, height: (self.reloadBtn.texture?.size().height)!)
             self.reloadBtn.position = CGPoint(x: self.size.width*0.5, y: self.size.height*0.3)
+            self.timeElapsedSprite.position = CGPoint(x: self.size.width/2, y: self.size.height*0.7)
         }
     }
     
