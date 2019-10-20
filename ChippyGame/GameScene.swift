@@ -44,10 +44,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var arrowButtonTouched = false
     var shootBullet = false
     var arrowButtonsRect:CGRect!
-    var burstType = 2
+    var burstType = 1
     var healthMilliCount = 0
     var shieldMilliCount = 60
-    var shieldTimer = 1
+    var shieldTimer = 0
     var timeElapsedSeconds = 00
     var timeElapsedMinutes = 00
     var timeElapsedHours = 00
@@ -68,7 +68,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         self.player = Player(imageNamed: "player")
         self.player.size.width = self.size.width/15
         self.player.size.height = self.size.height/12
-        self.player.position = CGPoint(x: self.size.width*0.2, y: self.size.height / 2)
+        self.player.position = CGPoint(x: self.size.width*0.2, y: self.size.height*0.3)
         addChild(self.player)
         
         self.playerHealthNode = self.scene?.childNode(withName: "playerHealth") as! SKShapeNode
@@ -162,7 +162,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         self.removeBullet()
         self.bulletHitsEnemy()
-        self.spawnEnemyBullet()
+        //self.spawnEnemyBullet()
         self.removeEnemyBullets()
         
         self.healthMilliCount = self.healthMilliCount + 1
@@ -176,12 +176,17 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         if (self.shieldMilliCount % 100 == 0){
             self.spawnObstacle()
         }
+        if (healthMilliCount%50 == 0){
+            self.spawnEnemyBullet()
+        }
         self.removePowerUp()
         self.playerGetsShield()
         if (self.shieldTimer > 0){
             self.shieldTimer = self.shieldTimer - 1
+            let shieldActiveSound = SKAction.playSoundFileNamed("shieldActive", waitForCompletion: true)
+            self.run(shieldActiveSound)
         }
-        if (self.shieldTimer) == 0 {
+        if (self.shieldTimer) == 1 {
             self.removePlayerShield()
         }
         self.endGame()
@@ -221,11 +226,14 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.playerBullet.position = CGPoint(x: self.player.position.x - 30, y: self.player.position.y)
             addChild(self.playerBullet)
             self.bulletsArray.append(self.playerBullet)
+            
+            let bulletSound = SKAction.playSoundFileNamed("shootBullet", waitForCompletion: true)
+            self.run(bulletSound)
         }
         print("No. of bullets: \(self.bulletsArray.count)")
     }
+    
     func spawnEnemyBullet(){
-        
         
         if (self.enemyBulletsArray.count <= 0){
             self.enemyBullet.zPosition = 4
@@ -345,10 +353,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                     duration = duration + 5
                 }
             }
-            
+            let bulletSound = SKAction.playSoundFileNamed("enemyBullet", waitForCompletion: true)
+            run(bulletSound)
             
             
         }
+        
     }
     
     func removeEnemyBullets(){
@@ -487,6 +497,8 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                        self.playerHealthNode.xScale = 5
                     }
                     }
+                    let healthUpSound = SKAction.playSoundFileNamed("healthUp", waitForCompletion: true)
+                    self.run(healthUpSound)
                 }
             }
             
@@ -708,9 +720,13 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.playerBullet.run(bulletAction)
         }
         else {
+            
+            
             let bulletVector = CGVector(dx: destination.x - self.player.position.x, dy: destination.y - self.player.position.y)
-            // Shoot the bullet to destination
-            self.playerBullet.physicsBody?.velocity = bulletVector
+//            // Shoot the bullet to destination
+            let bulletAction = SKAction.move(by: bulletVector, duration: 1.5)
+            self.playerBullet.run(bulletAction)
+//            self.playerBullet.physicsBody?.velocity = bulletVector
         }
     }
     
@@ -838,7 +854,6 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.moveBulletToTarget()
         }
         
-        //self.callback()
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.arrowTouched = ""
@@ -847,34 +862,6 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         self.shootBullet = false
         self.player.size.height = self.size.height/12
         //self.player.texture = SKTexture(imageNamed: "player")
-    }
-    
-    @objc func callback() {
-        self.movePlayer()
-        // loop in a non blocking way after 0.1 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            if (self.arrowTouched != "") {
-                self.callback()
-            }
-        }
-    }
-    @objc func spawnBulletsCallBack(){
-        self.spawnPlayerBullet()
-        self.moveBulletToTarget()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            if (self.shootBullet == true){
-                self.spawnBulletsCallBack()
-            }
-        }
-    }
-    @objc func spawnEnemyBulletsCallBack(){
-        self.spawnEnemyBullet()
-        //self.moveBulletToTarget()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            if (self.enemyBulletsArray.count == 0){
-                self.spawnEnemyBulletsCallBack()
-            }
-        }
     }
     
 }
