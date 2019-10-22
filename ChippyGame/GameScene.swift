@@ -833,6 +833,10 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 // reducing enemy health node to zero
                 self.enemyHealthNode.xScale = 0
             }
+            if(self.player.intersects(self.enemy)){
+                //move player to initial position if it hits enemy
+                self.player.position = CGPoint(x: self.size.width*0.2, y: self.size.height*0.3)
+            }
         }
     }
     
