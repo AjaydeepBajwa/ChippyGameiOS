@@ -75,6 +75,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         self.player.size.width = self.size.width/15
         self.player.size.height = self.size.height/12
         self.player.position = CGPoint(x: self.size.width*0.2, y: self.size.height*0.3)
+        self.player.zPosition = 5
         addChild(self.player)
         
         // Player Health Indicator
@@ -248,6 +249,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.playerBullet.size.height = self.player.size.height/2
             self.playerBullet.position = CGPoint(x: self.player.position.x - 30, y: self.player.position.y)
             addChild(self.playerBullet)
+            self.playerBullet.zPosition = 7
             self.bulletsArray.append(self.playerBullet)
 
             //Add sound when player spawns bullet
@@ -260,7 +262,6 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     func spawnEnemyBullet(){
         // Spawn Enemy Bullets if no.of bullets is zero
         if (self.enemyBulletsArray.count <= 0){
-            self.enemyBullet.zPosition = 4
             if (self.burstType == 1){
                 // Shoot enemy Bullets in a cicular burst
                 for i in stride(from: 0.1, to: 2*CFloat.pi, by: 0.3){
@@ -368,6 +369,12 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                     duration = duration + 5
                 }
             }
+            // Set zPosition of enemyBullets
+            self.enumerateChildNodes(withName: "enemyBullet") {
+                node, stop in
+                node.zPosition = 6
+            }
+            
             // play a sound when enemy shoots bullets in any pattern
             let bulletSound = SKAction.playSoundFileNamed("enemyBullet", waitForCompletion: true)
             run(bulletSound)
@@ -427,6 +434,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.healthUp.name = "healthUp"
             self.healthUp.position.x = self.size.width/2
             self.healthUp.position.y = 50
+            self.healthUp.zPosition = 4
             self.healthUp.physicsBody = SKPhysicsBody(rectangleOf: self.healthUp.size)
             self.healthUp.physicsBody?.categoryBitMask = 1
             self.healthUp.physicsBody?.collisionBitMask = 0
@@ -444,6 +452,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.shield.name = "shield"
             self.shield.position.x = self.size.width/2
             self.shield.position.y = 50
+            self.shield.zPosition = 4
             self.shield.physicsBody = SKPhysicsBody(rectangleOf: self.shield.size)
             self.shield.physicsBody?.categoryBitMask = 2
             self.shield.physicsBody?.collisionBitMask = 0
@@ -461,6 +470,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.obstacle.name = "obstacle"
             self.obstacle.position.x = CGFloat.random(in: self.size.width/2...self.size.width)
             self.obstacle.position.y = 50
+            self.obstacle.zPosition = 4
             self.obstacle.physicsBody = SKPhysicsBody(circleOfRadius: self.obstacle.size.width/2)
             self.obstacle.physicsBody?.categoryBitMask = 32
             self.obstacle.physicsBody?.collisionBitMask = 0
