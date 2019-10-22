@@ -15,13 +15,12 @@
 		05B760542200B2E40014A1B9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 05B760522200B2E40014A1B9 /* LaunchScreen.storyboard */; };
 		05B7605F2200B2E40014A1B9 /* ChipyGameUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B7605E2200B2E40014A1B9 /* ChipyGameUITests.swift */; };
 		D415CD31235CE28800CFA2C6 /* shootBullet.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D415CD30235CE28800CFA2C6 /* shootBullet.mp3 */; };
-		D415CD34235CE55000CFA2C6 /* enemyBullettt.wav in Resources */ = {isa = PBXBuildFile; fileRef = D415CD33235CE55000CFA2C6 /* enemyBullettt.wav */; };
+		D415CD34235CE55000CFA2C6 /* coreDead.wav in Resources */ = {isa = PBXBuildFile; fileRef = D415CD33235CE55000CFA2C6 /* coreDead.wav */; };
 		D415CD36235CE56700CFA2C6 /* 5.wav in Resources */ = {isa = PBXBuildFile; fileRef = D415CD35235CE56700CFA2C6 /* 5.wav */; };
 		D415CD38235CE59200CFA2C6 /* 2.wav in Resources */ = {isa = PBXBuildFile; fileRef = D415CD37235CE59200CFA2C6 /* 2.wav */; };
 		D415CD3A235CE5B500CFA2C6 /* enemyBullet.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D415CD39235CE5B500CFA2C6 /* enemyBullet.mp3 */; };
 		D415CD3C235CE5E300CFA2C6 /* healthUp.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D415CD3B235CE5E300CFA2C6 /* healthUp.mp3 */; };
 		D415CD3E235CF7E200CFA2C6 /* shieldActive.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D415CD3D235CF7E200CFA2C6 /* shieldActive.mp3 */; };
-		D435575D2349D54D005EE9C0 /* DirectionArrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D435575C2349D54D005EE9C0 /* DirectionArrow.swift */; };
 		D443EEC223493FAF004305C0 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D443EEC123493FAF004305C0 /* Player.swift */; };
 		D443EEC423494839004305C0 /* Bullet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D443EEC323494839004305C0 /* Bullet.swift */; };
 		D443EEC623497E3C004305C0 /* Enemy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D443EEC523497E3C004305C0 /* Enemy.swift */; };
@@ -51,13 +50,12 @@
 		05B7605E2200B2E40014A1B9 /* ChipyGameUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipyGameUITests.swift; sourceTree = "<group>"; };
 		05B760602200B2E40014A1B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D415CD30235CE28800CFA2C6 /* shootBullet.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shootBullet.mp3; sourceTree = "<group>"; };
-		D415CD33235CE55000CFA2C6 /* enemyBullettt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = enemyBullettt.wav; sourceTree = "<group>"; };
+		D415CD33235CE55000CFA2C6 /* coreDead.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = coreDead.wav; sourceTree = "<group>"; };
 		D415CD35235CE56700CFA2C6 /* 5.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 5.wav; sourceTree = "<group>"; };
 		D415CD37235CE59200CFA2C6 /* 2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 2.wav; sourceTree = "<group>"; };
 		D415CD39235CE5B500CFA2C6 /* enemyBullet.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = enemyBullet.mp3; sourceTree = "<group>"; };
 		D415CD3B235CE5E300CFA2C6 /* healthUp.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = healthUp.mp3; sourceTree = "<group>"; };
 		D415CD3D235CF7E200CFA2C6 /* shieldActive.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = shieldActive.mp3; sourceTree = "<group>"; };
-		D435575C2349D54D005EE9C0 /* DirectionArrow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionArrow.swift; sourceTree = "<group>"; };
 		D443EEC123493FAF004305C0 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		D443EEC323494839004305C0 /* Bullet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bullet.swift; sourceTree = "<group>"; };
 		D443EEC523497E3C004305C0 /* Enemy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enemy.swift; sourceTree = "<group>"; };
@@ -114,7 +112,6 @@
 				D443EEC123493FAF004305C0 /* Player.swift */,
 				D443EEC323494839004305C0 /* Bullet.swift */,
 				D443EEC523497E3C004305C0 /* Enemy.swift */,
-				D435575C2349D54D005EE9C0 /* DirectionArrow.swift */,
 				D44EA6B123540FE600C991B6 /* GameScene.sks */,
 			);
 			path = ChippyGame;
@@ -132,7 +129,7 @@
 		D415CD32235CE2EE00CFA2C6 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
-				D415CD33235CE55000CFA2C6 /* enemyBullettt.wav */,
+				D415CD33235CE55000CFA2C6 /* coreDead.wav */,
 				D415CD3D235CF7E200CFA2C6 /* shieldActive.mp3 */,
 				D415CD39235CE5B500CFA2C6 /* enemyBullet.mp3 */,
 				D415CD3B235CE5E300CFA2C6 /* healthUp.mp3 */,
@@ -228,7 +225,7 @@
 			files = (
 				D44EA6B223540FE600C991B6 /* GameScene.sks in Resources */,
 				D415CD3A235CE5B500CFA2C6 /* enemyBullet.mp3 in Resources */,
-				D415CD34235CE55000CFA2C6 /* enemyBullettt.wav in Resources */,
+				D415CD34235CE55000CFA2C6 /* coreDead.wav in Resources */,
 				05B7604F2200B2E40014A1B9 /* Main.storyboard in Resources */,
 				D415CD38235CE59200CFA2C6 /* 2.wav in Resources */,
 				05B760512200B2E40014A1B9 /* Assets.xcassets in Resources */,
@@ -254,7 +251,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D435575D2349D54D005EE9C0 /* DirectionArrow.swift in Sources */,
 				D443EEC223493FAF004305C0 /* Player.swift in Sources */,
 				05B7604A2200B2E40014A1B9 /* GameScene.swift in Sources */,
 				D443EEC623497E3C004305C0 /* Enemy.swift in Sources */,

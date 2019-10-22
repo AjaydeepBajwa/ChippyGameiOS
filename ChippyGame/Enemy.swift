@@ -24,15 +24,6 @@ class Enemy: SKSpriteNode {
     override init(texture: SKTexture?, color: UIColor, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
         
-        //self.texture = SKTexture(imageNamed: "roll")
-        //        self.bullet = SKSpriteNode(imageNamed:"player")
-        //        self.bullet.position.y = 500
-        //        self.bullet.position.x = 800
-        //        addChild(self.bullet)
-        
-        //self.spawnBullet()
-        
-        
         
         
     }
