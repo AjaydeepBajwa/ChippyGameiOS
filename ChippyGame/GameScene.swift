@@ -178,7 +178,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         }
         
         //remove bullets after they hit edges or player/enemy
-        self.removeBullet()
+        self.removePlayerBullet()
         self.bulletHitsEnemy()
         self.removeEnemyBullets()
         
@@ -245,7 +245,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.playerBullet.physicsBody?.affectedByGravity = false
             self.playerBullet.physicsBody?.categoryBitMask = 16
             self.playerBullet.physicsBody?.collisionBitMask = 0
-            self.playerBullet.size.width = self.player.size.width/2
+            self.playerBullet.size.width = self.player.size.width/3
             self.playerBullet.size.height = self.player.size.height/2
             self.playerBullet.position = CGPoint(x: self.player.position.x - 30, y: self.player.position.y)
             addChild(self.playerBullet)
@@ -283,7 +283,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             if(self.burstType == 2){
                 // Shoot Bullets that target the player.
                 var duration = 50
-                for i in stride(from: 1, to: 4, by: 1){
+                for i in stride(from: 1, to: 8, by: 1){
                     self.enemyBullet = Bullet(imageNamed: "enemyBullet2")
                     self.enemyBullet.name = "enemyBullet"
                     self.enemyBullet.position = self.enemyCore.position
@@ -584,9 +584,9 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         // Stop the Game if enemy dies or player dies
         if (self.enemyHealthNode.xScale <= 0.5){
             // show congrats message
-            let congratsMessage = SKLabelNode(text: "Congratulations, You Won!")
-            congratsMessage.fontSize = 150
-            congratsMessage.fontName = "Avenir"
+            let congratsMessage = SKLabelNode(text: "Congratulations, You Win!")
+            congratsMessage.fontSize = 100
+            congratsMessage.fontName = "Copperplate-Bold"
             congratsMessage.fontColor = UIColor.red
             congratsMessage.position = CGPoint(x: self.size.width/2, y: self.size.height/2)
             addChild(congratsMessage)
@@ -701,7 +701,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         
     }
-    func removeBullet(){
+    func removePlayerBullet(){
         //Remove Player bullet after it hits screen edges or enemy
         self.playerBullet.name = "playerBullet"
         self.enumerateChildNodes(withName: "playerBullet") {
@@ -769,14 +769,14 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             destination = destination2
         }
         
-        if (((self.player.position.y - 30)...(self.player.position.y)).contains(self.mouseY)){
+        if (((self.player.position.y - 80)...(self.player.position.y)).contains(self.mouseY)){
             let bulletAction = SKAction.applyImpulse(CGVector(dx: mouseX - self.player.position.x , dy: mouseY - self.player.position.y), duration: 0.5)
             self.playerBullet.run(bulletAction)
         }
         else {
             let bulletVector = CGVector(dx: destination.x - self.player.position.x, dy: destination.y - self.player.position.y)
             // Shoot the bullet to destination
-            let bulletAction = SKAction.move(by: bulletVector, duration: 1.5)
+            let bulletAction = SKAction.move(by: bulletVector, duration: 2)
             self.playerBullet.run(bulletAction)
 //            self.playerBullet.physicsBody?.velocity = bulletVector
         }
@@ -790,7 +790,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.enemy = node as? SKSpriteNode
             if self.playerBullet.intersects(self.enemy){
                 self.enemy.removeFromParent()
-                self.removeBullet()
+                self.removePlayerBullet()
                 print("enemy removed")
                 self.enemyPartsCount = self.enemyPartsCount - 1
                 self.enemyHealthNode.xScale = self.enemyHealthNode.xScale - CGFloat((self.enemyPartPercentage * 5)/100)
@@ -827,7 +827,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
                 //remove enemy Core
                 self.enemyCore.removeFromParent()
                 //remove palyer bullet
-                self.removeBullet()
+                self.removePlayerBullet()
                 print("core removed")
                 self.enemyPartsCount = 0
                 // reducing enemy health node to zero
@@ -897,7 +897,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             self.shootBullet = true
         }
         
-        // Checking ig Restart/Reload Button is touched
+        // Checking if Restart/Reload Button is touched
         if (self.reloadBtn.contains(touch.location(in: self))){
             //Remove all the Scene Children
             self.removeAllChildren()

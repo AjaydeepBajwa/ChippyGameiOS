@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "player_bullet.png",
+      "filename" : "playerBullett.png",
       "scale" : "1x"
     },
     {

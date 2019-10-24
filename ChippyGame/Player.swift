@@ -9,8 +9,7 @@
 import Foundation
 import SpriteKit
 
-// A custom SpriteNode class.
-// Used to represent a piece of sushi in the tower.
+// custom SpriteNode class.
 class Player: SKSpriteNode {
     var bulletPiece: SKSpriteNode!
     //var bullets:[SKSpriteNode] = []
